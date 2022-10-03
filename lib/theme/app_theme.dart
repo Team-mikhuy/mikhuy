@@ -1,0 +1,130 @@
+import 'package:flutter/material.dart';
+import 'package:mikhuy/theme/theme.dart';
+
+/// Official theme, containing text theme
+/// and individual components theme
+class AppTheme {
+  /// Text theme for light mode, currently the only mode.
+  /// Dark text on light surface
+  static TextTheme get lightTextTheme {
+    return TextTheme(
+      headline1: AppTextStyle.headline1,
+      headline2: AppTextStyle.headline2,
+      subtitle1: AppTextStyle.subtitle1,
+      subtitle2: AppTextStyle.subtitle2,
+      bodyText1: AppTextStyle.body,
+      button: AppTextStyle.button,
+      caption: AppTextStyle.caption,
+      overline: AppTextStyle.overline,
+    );
+  }
+
+  /// Theme on light mode, currently the only mode.
+  /// Applies to colors and individual components.
+  static ThemeData get light {
+    return ThemeData(
+      textTheme: lightTextTheme,
+
+      /// Sets the default size of icons to 32
+      iconTheme: const IconThemeData(size: 32),
+
+      /// Sets the primary color to shiraz, in
+      /// order to match the design
+      primarySwatch: AppColors.flushOrange,
+      backgroundColor: AppColors.white,
+      scaffoldBackgroundColor: AppColors.white,
+
+      /// Sets the default app bar background color to white, with dark
+      /// text and 0.5 of elevation in order to match the design
+      appBarTheme: AppBarTheme(
+        color: AppColors.white,
+        foregroundColor: AppColors.acadia,
+        iconTheme: const IconThemeData(size: 32, color: AppColors.acadia),
+        elevation: 0.5,
+        actionsIconTheme: IconThemeData(
+          size: 32,
+          color: AppColors.grey.shade300,
+        ),
+        toolbarTextStyle: lightTextTheme.headline2,
+      ),
+
+      /// Sets the default shape, colors, elevation and padding
+      /// to match the design, making use of the primary color flushOrange
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(AppColors.flushOrange),
+          foregroundColor: MaterialStateProperty.all(AppColors.white),
+          elevation: MaterialStateProperty.all(0.5),
+          shape: MaterialStateProperty.all(
+            const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16)),
+            ),
+          ),
+          padding: MaterialStateProperty.all(const EdgeInsets.all(12)),
+        ),
+      ),
+
+      /// Sets the default shape and colors to match the design,
+      /// using the primary color shiraz for text and its variation
+      /// shiraz 100 when it is pressed
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith(
+            (states) {
+              if (states.contains(MaterialState.pressed)) {
+                return AppColors.flushOrange.shade200;
+              }
+              return AppColors.white;
+            },
+          ),
+          shape: MaterialStateProperty.all(
+            const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16)),
+            ),
+          ),
+        ),
+      ),
+
+      /// Sets the default style of text fields to match
+      /// the design. Mainly removes borders and applies a
+      /// circular border radius to corners.
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: AppColors.grey.shade50,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.blueMalibu.shade300),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: AppColors.blueMalibu),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: AppColors.danger),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: AppColors.danger),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 12,
+          horizontal: 10,
+        ),
+        suffixIconColor: AppColors.grey.shade900,
+        hintStyle: AppTextStyle.subtitle1.copyWith(
+          color: AppColors.grey.shade700,
+        ),
+      ),
+
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: AppColors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(24),
+          ),
+        ),
+      ),
+    );
+  }
+}
