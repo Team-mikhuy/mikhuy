@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.9.0"
+  authentication:
+    dependency: "direct main"
+    description:
+      path: "packages/authentication"
+      relative: true
+    source: path
+    version: "1.0.0"
   bloc:
     dependency: "direct main"
     description:
@@ -99,6 +106,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.1"
+  equatable:
+    dependency: "direct main"
+    description:
+      name: equatable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.5"
   fake_async:
     dependency: transitive
     description:
@@ -189,6 +203,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  formz:
+    dependency: "direct main"
+    description:
+      name: formz
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.1"
   frontend_server_client:
     dependency: transitive
     description:
