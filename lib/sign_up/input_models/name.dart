@@ -9,14 +9,14 @@ enum NameValidationError {
   empty
 }
 
-/// {@template password}
-/// Form input for an password input.
+/// {@template name}
+/// Form input for a name input.
 /// {@endtemplate}
 class Name extends FormzInput<String, NameValidationError> {
-  /// {@macro password}
+  /// {@macro name}
   const Name.pure() : super.pure('');
 
-  /// {@macro password}
+  /// {@macro name}
   const Name.dirty([super.value = '']) : super.dirty();
 
   @override

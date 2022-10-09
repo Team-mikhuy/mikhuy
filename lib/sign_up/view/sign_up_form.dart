@@ -22,13 +22,15 @@ class SignUpForm extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            _NameInput(),
+            const SizedBox(height: 8),
+            _BirthDateInput(),
+            const SizedBox(height: 8),
             _EmailInput(),
             const SizedBox(height: 8),
             _PasswordInput(),
             const SizedBox(height: 8),
             _ConfirmPasswordInput(),
-            const SizedBox(height: 8),
-            _NameInput(),
             const SizedBox(height: 8),
             _SignUpButton(),
           ],
@@ -118,11 +120,48 @@ class _NameInput extends StatelessWidget {
         return TextField(
           key: const Key('signUpForm_nameInput_textField'),
           onChanged: (name) => context.read<SignUpCubit>().nameChanged(name),
-          keyboardType: TextInputType.name,
           decoration: InputDecoration(
-            labelText: 'name',
+            labelText: 'Nombre',
             helperText: '',
             errorText: state.name.invalid ? 'invalid email' : null,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _BirthDateInput extends StatelessWidget {
+  final controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignUpCubit, SignUpState>(
+      buildWhen: (previous, current) => previous.birthdate != current.birthdate,
+      builder: (context, state) {
+        return TextField(
+          key: const Key('signUpForm_birthdateInput_textField'),
+          controller: controller,
+          onTap: () async {
+            final birthdate = await showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime(1950),
+              lastDate: DateTime(DateTime.now().year + 1),
+            );
+
+            if (birthdate != null) {
+              // ignore: use_build_context_synchronously
+              context.read<SignUpCubit>().birthdateChanged(birthdate);
+              controller.text =
+                  '${birthdate.day}/${birthdate.month}/${birthdate.year}';
+            }
+          },
+          readOnly: true,
+          decoration: InputDecoration(
+            labelText: 'Fecha de nacimiento',
+            hintText: 'DD/MM/AAAA',
+            errorText: state.birthdate.invalid ? 'invalid email' : null,
           ),
         );
       },

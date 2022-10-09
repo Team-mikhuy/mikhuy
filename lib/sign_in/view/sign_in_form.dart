@@ -23,7 +23,6 @@ class SignInForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 16),
               _EmailInput(),
               const SizedBox(height: 8),
               _PasswordInput(),
@@ -93,16 +92,17 @@ class _LoginButton extends StatelessWidget {
             ? const CircularProgressIndicator()
             : ElevatedButton(
                 key: const Key('signInForm_continue_raisedButton'),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  backgroundColor: const Color(0xFFFFD600),
-                ),
                 onPressed: state.status.isValidated
                     ? () => context.read<SignInCubit>().logInWithCredentials()
                     : null,
-                child: const Text('LOGIN'),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text('INICIAR SESION'),
+                    SizedBox(width: 8),
+                    Icon(MdiIcons.arrowRight),
+                  ],
+                ),
               );
       },
     );

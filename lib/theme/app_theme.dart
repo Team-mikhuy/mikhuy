@@ -52,15 +52,27 @@ class AppTheme {
       /// to match the design, making use of the primary color flushOrange
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(AppColors.flushOrange),
+          backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.disabled)) {
+                return AppColors.flushOrange.shade200;
+              }
+
+              return AppColors.flushOrange.shade500;
+            },
+          ),
           foregroundColor: MaterialStateProperty.all(AppColors.white),
+          overlayColor:
+              MaterialStateProperty.all(AppColors.flushOrange.shade700),
           elevation: MaterialStateProperty.all(0.5),
           shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(16)),
             ),
           ),
-          padding: MaterialStateProperty.all(const EdgeInsets.all(12)),
+          padding: MaterialStateProperty.all(
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+          ),
         ),
       ),
 
@@ -79,24 +91,41 @@ class AppTheme {
           ),
           shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16)),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
+          ),
+          padding: MaterialStateProperty.all(
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
           ),
         ),
       ),
+
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: AppColors.blueMalibu.shade700,
+      ),
+      errorColor: AppColors.danger,
 
       /// Sets the default style of text fields to match
       /// the design. Mainly removes borders and applies a
       /// circular border radius to corners.
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.grey.shade50,
+        fillColor: AppColors.flushOrange.shade50,
+        floatingLabelStyle: AppTextStyle.headline2.copyWith(
+          color: AppColors.flushOrange.shade700,
+        ),
+        labelStyle: AppTextStyle.subtitle2.copyWith(
+          color: AppColors.grey.shade700,
+        ),
+        errorStyle: AppTextStyle.overline.copyWith(
+          color: AppColors.danger,
+        ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.blueMalibu.shade300),
+          borderSide: BorderSide.none,
           borderRadius: BorderRadius.circular(8),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: AppColors.blueMalibu),
+          borderSide: BorderSide(color: AppColors.flushOrange.shade500),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedErrorBorder: OutlineInputBorder(
@@ -108,8 +137,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(8),
         ),
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 12,
-          horizontal: 10,
+          vertical: 16,
+          horizontal: 16,
         ),
         suffixIconColor: AppColors.grey.shade900,
         hintStyle: AppTextStyle.subtitle1.copyWith(

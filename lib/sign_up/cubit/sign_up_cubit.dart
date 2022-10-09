@@ -22,6 +22,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.password,
           state.confirmedPassword,
           state.name,
+          state.birthdate,
         ]),
       ),
     );
@@ -42,6 +43,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           password,
           confirmedPassword,
           state.name,
+          state.birthdate,
         ]),
       ),
     );
@@ -60,6 +62,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.password,
           confirmedPassword,
           state.name,
+          state.birthdate,
         ]),
       ),
     );
@@ -76,6 +79,23 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.password,
           state.confirmedPassword,
           name,
+          state.birthdate,
+        ]),
+      ),
+    );
+  }
+
+  void birthdateChanged(DateTime value) {
+    final birthdate = BirthDate.dirty(value);
+    emit(
+      state.copyWith(
+        birthdate: birthdate,
+        status: Formz.validate([
+          state.email,
+          state.password,
+          state.confirmedPassword,
+          state.name,
+          birthdate,
         ]),
       ),
     );
