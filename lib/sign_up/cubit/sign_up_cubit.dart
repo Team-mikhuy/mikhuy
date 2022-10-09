@@ -23,6 +23,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.confirmedPassword,
           state.name,
           state.birthdate,
+          state.genre,
         ]),
       ),
     );
@@ -44,6 +45,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           confirmedPassword,
           state.name,
           state.birthdate,
+          state.genre,
         ]),
       ),
     );
@@ -63,6 +65,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           confirmedPassword,
           state.name,
           state.birthdate,
+          state.genre,
         ]),
       ),
     );
@@ -80,6 +83,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.confirmedPassword,
           name,
           state.birthdate,
+          state.genre,
         ]),
       ),
     );
@@ -96,6 +100,25 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.confirmedPassword,
           state.name,
           birthdate,
+          state.genre,
+        ]),
+      ),
+    );
+  }
+
+  void genreChanged(String value) {
+    final genre = Genre.dirty(value);
+
+    emit(
+      state.copyWith(
+        genre: genre,
+        status: Formz.validate([
+          state.email,
+          state.password,
+          state.confirmedPassword,
+          state.name,
+          state.birthdate,
+          genre,
         ]),
       ),
     );

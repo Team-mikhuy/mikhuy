@@ -9,6 +9,7 @@ class SignUpState extends Equatable {
     this.confirmedPassword = const ConfirmedPassword.pure(),
     this.name = const Name.pure(),
     this.birthdate = const BirthDate.pure(),
+    this.genre = const Genre.pure(),
     this.status = FormzStatus.pure,
     this.errorMessage,
   });
@@ -18,12 +19,13 @@ class SignUpState extends Equatable {
   final ConfirmedPassword confirmedPassword;
   final Name name;
   final BirthDate birthdate;
+  final Genre genre;
   final FormzStatus status;
   final String? errorMessage;
 
   @override
   List<Object> get props =>
-      [email, password, confirmedPassword, name, birthdate, status];
+      [email, password, confirmedPassword, name, birthdate, genre, status];
 
   SignUpState copyWith({
     Email? email,
@@ -31,6 +33,7 @@ class SignUpState extends Equatable {
     ConfirmedPassword? confirmedPassword,
     Name? name,
     BirthDate? birthdate,
+    Genre? genre,
     FormzStatus? status,
     String? errorMessage,
   }) {
@@ -40,6 +43,7 @@ class SignUpState extends Equatable {
       confirmedPassword: confirmedPassword ?? this.confirmedPassword,
       name: name ?? this.name,
       birthdate: birthdate ?? this.birthdate,
+      genre: genre ?? this.genre,
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
     );

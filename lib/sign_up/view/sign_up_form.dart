@@ -26,6 +26,8 @@ class SignUpForm extends StatelessWidget {
             const SizedBox(height: 8),
             _BirthDateInput(),
             const SizedBox(height: 8),
+            _GenreInput(),
+            const SizedBox(height: 8),
             _EmailInput(),
             const SizedBox(height: 8),
             _PasswordInput(),
@@ -163,6 +165,51 @@ class _BirthDateInput extends StatelessWidget {
             hintText: 'DD/MM/AAAA',
             errorText: state.birthdate.invalid ? 'invalid email' : null,
           ),
+        );
+      },
+    );
+  }
+}
+
+class _GenreInput extends StatefulWidget {
+  final genreOptions = <String>['Prefiero no decirlo', 'Femenino', 'Masculino'];
+
+  @override
+  State<_GenreInput> createState() => _GenreInputState();
+}
+
+class _GenreInputState extends State<_GenreInput> {
+  late String value;
+
+  @override
+  void initState() {
+    super.initState();
+    value = widget.genreOptions.first;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignUpCubit, SignUpState>(
+      buildWhen: (previous, current) => previous.birthdate != current.birthdate,
+      builder: (context, state) {
+        return DropdownButton<String>(
+          value: value,
+          icon: const Icon(MdiIcons.chevronDown),
+          elevation: 16,
+          onChanged: (genre) {
+            genre ??= widget.genreOptions.first;
+            context.read<SignUpCubit>().genreChanged(genre);
+            setState(() {
+              value = genre!;
+            });
+          },
+          items:
+              widget.genreOptions.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
         );
       },
     );

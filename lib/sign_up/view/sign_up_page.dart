@@ -2,6 +2,7 @@ import 'package:authentication/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mikhuy/sign_up/sign_up.dart';
 
 part 'sign_up_form.dart';
