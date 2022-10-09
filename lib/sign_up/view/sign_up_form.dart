@@ -28,6 +28,8 @@ class SignUpForm extends StatelessWidget {
             const SizedBox(height: 8),
             _GenreInput(),
             const SizedBox(height: 8),
+            _UsernameInput(),
+            const SizedBox(height: 8),
             _EmailInput(),
             const SizedBox(height: 8),
             _PasswordInput(),
@@ -54,7 +56,6 @@ class _EmailInput extends StatelessWidget {
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             labelText: 'email',
-            helperText: '',
             errorText: state.email.invalid ? 'invalid email' : null,
           ),
         );
@@ -77,7 +78,6 @@ class _PasswordInput extends StatelessWidget {
           keyboardType: TextInputType.visiblePassword,
           decoration: InputDecoration(
             labelText: 'password',
-            helperText: '',
             errorText: state.password.invalid ? 'invalid password' : null,
           ),
         );
@@ -102,7 +102,6 @@ class _ConfirmPasswordInput extends StatelessWidget {
           obscureText: true,
           decoration: InputDecoration(
             labelText: 'confirm password',
-            helperText: '',
             errorText: state.confirmedPassword.invalid
                 ? 'passwords do not match'
                 : null,
@@ -124,7 +123,6 @@ class _NameInput extends StatelessWidget {
           onChanged: (name) => context.read<SignUpCubit>().nameChanged(name),
           decoration: InputDecoration(
             labelText: 'Nombre',
-            helperText: '',
             errorText: state.name.invalid ? 'invalid email' : null,
           ),
         );
@@ -193,6 +191,7 @@ class _GenreInputState extends State<_GenreInput> {
       buildWhen: (previous, current) => previous.birthdate != current.birthdate,
       builder: (context, state) {
         return DropdownButton<String>(
+          key: const Key('signUpForm_genreInput_dropdown'),
           value: value,
           icon: const Icon(MdiIcons.chevronDown),
           elevation: 16,
@@ -210,6 +209,26 @@ class _GenreInputState extends State<_GenreInput> {
               child: Text(value),
             );
           }).toList(),
+        );
+      },
+    );
+  }
+}
+
+class _UsernameInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignUpCubit, SignUpState>(
+      buildWhen: (previous, current) => previous.username != current.username,
+      builder: (context, state) {
+        return TextField(
+          key: const Key('signUpForm_usernameInput_textField'),
+          onChanged: (username) =>
+              context.read<SignUpCubit>().usernameChanged(username),
+          decoration: InputDecoration(
+            labelText: 'Nombre de usuario',
+            errorText: state.username.invalid ? 'invalid username' : null,
+          ),
         );
       },
     );

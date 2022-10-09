@@ -24,6 +24,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.name,
           state.birthdate,
           state.genre,
+          state.username,
         ]),
       ),
     );
@@ -46,6 +47,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.name,
           state.birthdate,
           state.genre,
+          state.username,
         ]),
       ),
     );
@@ -66,6 +68,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.name,
           state.birthdate,
           state.genre,
+          state.username,
         ]),
       ),
     );
@@ -84,6 +87,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           name,
           state.birthdate,
           state.genre,
+          state.username,
         ]),
       ),
     );
@@ -101,6 +105,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.name,
           birthdate,
           state.genre,
+          state.username,
         ]),
       ),
     );
@@ -119,6 +124,26 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.name,
           state.birthdate,
           genre,
+          state.username,
+        ]),
+      ),
+    );
+  }
+
+  void usernameChanged(String value) {
+    final username = Username.dirty(value);
+
+    emit(
+      state.copyWith(
+        username: username,
+        status: Formz.validate([
+          state.email,
+          state.password,
+          state.confirmedPassword,
+          state.name,
+          state.birthdate,
+          state.genre,
+          username,
         ]),
       ),
     );
