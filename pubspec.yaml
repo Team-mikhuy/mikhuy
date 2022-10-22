@@ -23,6 +23,8 @@ dependencies:
   google_fonts: ^3.0.1
   intl: ^0.17.0
   material_design_icons_flutter: ^5.0.6996
+  models:
+    path: packages/models
 
 dev_dependencies:
   bloc_test: ^9.1.0

@@ -32,6 +32,10 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
         return const SignUpWithEmailAndPasswordFailure(
           'Please enter a stronger password.',
         );
+      case 'username-already-in-use':
+        return const SignUpWithEmailAndPasswordFailure(
+          'An account already exists for that username.',
+        );
       default:
         return const SignUpWithEmailAndPasswordFailure();
     }

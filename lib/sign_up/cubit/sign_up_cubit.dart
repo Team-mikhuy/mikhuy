@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:mikhuy/shared/shared.dart';
 import 'package:mikhuy/sign_up/sign_up.dart';
+import 'package:models/models.dart';
 
 part 'sign_up_state.dart';
 
@@ -153,10 +154,17 @@ class SignUpCubit extends Cubit<SignUpState> {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
-      await _authenticationRepository.signUp(
-        email: state.email.value,
-        password: state.password.value,
+      final user = User.empty.copyWith(
         name: state.name.value,
+        mail: state.email.value,
+        username: state.username.value,
+        genre: state.genre.value,
+        birthdate: state.birthdate.value,
+      );
+
+      await _authenticationRepository.signUp(
+        user: user,
+        password: state.password.value,
       );
 
       emit(state.copyWith(status: FormzStatus.submissionSuccess));

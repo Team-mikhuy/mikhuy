@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('User email: ${user.email}'),
+            Text('User email: ${user.mail}'),
             Text('User name: ${user.name}'),
             TextButton(
               onPressed: () =>

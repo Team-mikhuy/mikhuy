@@ -22,7 +22,7 @@ class Username extends FormzInput<String, UsernameValidationError> {
   @override
   UsernameValidationError? validator(String? value) {
     if (value == null) return UsernameValidationError.empty;
-    return RegExp(r'^(?=.{8,20}$)[a-zA-Z0-9._]+$').hasMatch(value)
+    return RegExp(r'^(?=.{3,25}$)[a-zA-Z0-9._]+$').hasMatch(value)
         ? null
         : UsernameValidationError.invalid;
   }

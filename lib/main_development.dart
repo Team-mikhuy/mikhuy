@@ -9,7 +9,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   final authenticationRepository = AuthenticationRepository();
-  await authenticationRepository.user.first;
+  await authenticationRepository.userStream.first;
 
   await bootstrap(
     () => App(
