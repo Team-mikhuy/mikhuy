@@ -4,7 +4,7 @@
 class SignUpWithEmailAndPasswordFailure implements Exception {
   /// {@macro sign_up_with_email_and_password_failure}
   const SignUpWithEmailAndPasswordFailure([
-    this.message = 'An unknown exception occurred.',
+    this.message = 'Ha ocurrido un error inesperado :(',
   ]);
 
   /// Create an authentication message
@@ -14,27 +14,27 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
     switch (code) {
       case 'invalid-email':
         return const SignUpWithEmailAndPasswordFailure(
-          'Email is not valid or badly formatted.',
+          'El correo es inválido o tiene un formato incorrecto.',
         );
       case 'user-disabled':
         return const SignUpWithEmailAndPasswordFailure(
-          'This user has been disabled. Please contact support for help.',
+          'Este usuario ha sido deshabilitado. Contacta a soporte por ayuda.',
         );
       case 'email-already-in-use':
         return const SignUpWithEmailAndPasswordFailure(
-          'An account already exists for that email.',
+          'El correo ya está en uso con otra cuenta.',
         );
       case 'operation-not-allowed':
         return const SignUpWithEmailAndPasswordFailure(
-          'Operation is not allowed.  Please contact support.',
+          'Operación no permitida. Por favor contacta a soporte.',
         );
       case 'weak-password':
         return const SignUpWithEmailAndPasswordFailure(
-          'Please enter a stronger password.',
+          'Por favor ingresa una contraseña más segura.',
         );
       case 'username-already-in-use':
         return const SignUpWithEmailAndPasswordFailure(
-          'An account already exists for that username.',
+          'El nombre de usuario ya está en uso, intenta con otro.',
         );
       default:
         return const SignUpWithEmailAndPasswordFailure();
@@ -52,7 +52,7 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
 class LogInWithEmailAndPasswordFailure implements Exception {
   /// {@macro log_in_with_email_and_password_failure}
   const LogInWithEmailAndPasswordFailure([
-    this.message = 'An unknown exception occurred.',
+    this.message = 'Ha ocurrido un error inesperado :(',
   ]);
 
   /// Create an authentication message
@@ -61,19 +61,19 @@ class LogInWithEmailAndPasswordFailure implements Exception {
     switch (code) {
       case 'invalid-email':
         return const LogInWithEmailAndPasswordFailure(
-          'Email is not valid or badly formatted.',
+          'El correo es inválido o tiene un formato incorrecto.',
         );
       case 'user-disabled':
         return const LogInWithEmailAndPasswordFailure(
-          'This user has been disabled. Please contact support for help.',
+          'Este usuario ha sido deshabilitado. Contacta a soporte por ayuda.',
         );
       case 'user-not-found':
         return const LogInWithEmailAndPasswordFailure(
-          'Email is not found, please create an account.',
+          'Usuario no registrado, verifica tu correo o nombre de usuario.',
         );
       case 'wrong-password':
         return const LogInWithEmailAndPasswordFailure(
-          'Incorrect password, please try again.',
+          'Contraseña incorrecta, inténtalo otra vez.',
         );
       default:
         return const LogInWithEmailAndPasswordFailure();
