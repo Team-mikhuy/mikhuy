@@ -42,6 +42,7 @@ class AppView extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
+      debugShowCheckedModeBanner: false,
       home: BlocBuilder<AppBloc, AppState>(
         builder: (context, state) {
           return state.status == AppStatus.authenticated
