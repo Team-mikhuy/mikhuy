@@ -18,7 +18,12 @@ class SignUpForm extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              SnackBar(content: Text(state.errorMessage ?? 'Sign Up Failure')),
+              SnackBar(
+                content: Text(
+                  state.errorMessage ??
+                      'Ups! Ocurrió un error inesperado, inténtalo otra vez.',
+                ),
+              ),
             );
         }
       },
@@ -63,7 +68,7 @@ class _EmailInput extends StatelessWidget {
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             labelText: 'Correo electrónico',
-            errorText: state.email.invalid ? 'invalid email' : null,
+            errorText: state.email.invalid ? 'Correo inválido' : null,
           ),
         );
       },
@@ -85,7 +90,13 @@ class _PasswordInput extends StatelessWidget {
           keyboardType: TextInputType.visiblePassword,
           decoration: InputDecoration(
             labelText: 'Contraseña',
-            errorText: state.password.invalid ? 'invalid password' : null,
+            errorText: state.password.invalid
+                ? '''
+Tu contraseña debe contener:
+- Al menos un número
+- Al menos una letra
+- 8 caracteres'''
+                : null,
           ),
         );
       },
@@ -110,7 +121,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'Confirma tu contraseña',
             errorText: state.confirmedPassword.invalid
-                ? 'passwords do not match'
+                ? 'Las contraseñas no coinciden'
                 : null,
           ),
         );
@@ -130,7 +141,9 @@ class _NameInput extends StatelessWidget {
           onChanged: (name) => context.read<SignUpCubit>().nameChanged(name),
           decoration: InputDecoration(
             labelText: 'Nombre',
-            errorText: state.name.invalid ? 'invalid email' : null,
+            errorText: state.name.invalid
+                ? 'Debe contener al menos 3 caracteres'
+                : null,
           ),
         );
       },
@@ -168,7 +181,7 @@ class _BirthDateInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'Fecha de nacimiento',
             hintText: 'DD/MM/AAAA',
-            errorText: state.birthdate.invalid ? 'invalid date' : null,
+            errorText: state.birthdate.invalid ? 'Fecha inválida' : null,
           ),
         );
       },
@@ -249,7 +262,10 @@ class _UsernameInput extends StatelessWidget {
               context.read<SignUpCubit>().usernameChanged(username),
           decoration: InputDecoration(
             labelText: 'Nombre de usuario',
-            errorText: state.username.invalid ? 'invalid username' : null,
+            errorText: state.username.invalid
+                // ignore: lines_longer_than_80_chars
+                ? 'No debe contener espacios ni caracteres\nespeciales además de ._'
+                : null,
           ),
         );
       },
