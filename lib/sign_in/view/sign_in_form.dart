@@ -36,13 +36,6 @@ class SignInForm extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           _LoginButton(),
-          const Divider(height: 64),
-          Text(
-            '¿AUN NO TIENES UNA CUENTA?',
-            style: Theme.of(context).textTheme.caption,
-          ),
-          const SizedBox(height: 8),
-          _SignUpButton(),
         ],
       ),
     );
@@ -60,8 +53,8 @@ class _EmailInput extends StatelessWidget {
           onChanged: (email) => context.read<SignInCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            labelText: 'Correo electronico',
-            errorText: state.email.invalid ? 'invalid email' : null,
+            labelText: 'Correo electrónico',
+            errorText: state.email.invalid ? 'Correo inválido' : null,
           ),
         );
       },
@@ -83,7 +76,7 @@ class _PasswordInput extends StatelessWidget {
           keyboardType: TextInputType.visiblePassword,
           decoration: InputDecoration(
             labelText: 'Contraseña',
-            errorText: state.password.invalid ? 'invalid password' : null,
+            errorText: state.password.invalid ? 'Contraseña vacía' : null,
           ),
         );
       },
@@ -106,25 +99,10 @@ class _LoginButton extends StatelessWidget {
                   onPressed: state.status.isValidated
                       ? () => context.read<SignInCubit>().logInWithCredentials()
                       : null,
-                  child: const Text('INICIAR SESION'),
+                  child: const Text('INICIAR SESIÓN'),
                 ),
               );
       },
-    );
-  }
-}
-
-class _SignUpButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        key: const Key('signInForm_createAccount_flatButton'),
-        onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
-        style: AppTheme.secondaryButton,
-        child: const Text('CREAR CUENTA'),
-      ),
     );
   }
 }

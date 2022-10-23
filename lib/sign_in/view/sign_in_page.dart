@@ -44,7 +44,7 @@ class SignInPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Inicia sesion para ingresar :)',
+                    'Inicia sesión para ingresar :)',
                     style: Theme.of(context)
                         .textTheme
                         .subtitle1!
@@ -56,11 +56,33 @@ class SignInPage extends StatelessWidget {
                         SignInCubit(context.read<AuthenticationRepository>()),
                     child: const SignInForm(),
                   ),
+                  const Divider(height: 64),
+                  Text(
+                    '¿AÚN NO TIENES UNA CUENTA?',
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                  const SizedBox(height: 8),
+                  _SignUpButton(),
                 ],
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SignUpButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        key: const Key('signInForm_createAccount_flatButton'),
+        onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
+        style: AppTheme.secondaryButton,
+        child: const Text('CREAR CUENTA'),
       ),
     );
   }
