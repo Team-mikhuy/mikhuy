@@ -1,13 +1,19 @@
-// Copyright (c) 2022, Very Good Ventures
-// https://verygood.ventures
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT.
-
+import 'package:authentication/authentication.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mikhuy/app/app.dart';
 import 'package:mikhuy/bootstrap.dart';
 
-void main() {
-  bootstrap(() => const App());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  final authenticationRepository = AuthenticationRepository();
+  await authenticationRepository.userStream.first;
+
+  await bootstrap(
+    () => App(
+      authenticationRepository: authenticationRepository,
+    ),
+  );
 }
