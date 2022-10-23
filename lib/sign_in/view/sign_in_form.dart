@@ -17,22 +17,33 @@ class SignInForm extends StatelessWidget {
             );
         }
       },
-      child: Align(
-        alignment: const Alignment(0, -1 / 3),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _EmailInput(),
-              const SizedBox(height: 8),
-              _PasswordInput(),
-              const SizedBox(height: 8),
-              _LoginButton(),
-              const SizedBox(height: 8),
-              _SignUpButton(),
-            ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _EmailInput(),
+          const SizedBox(height: 24),
+          _PasswordInput(),
+          const SizedBox(height: 4),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () {},
+              style: const ButtonStyle(
+                padding: MaterialStatePropertyAll(EdgeInsets.zero),
+              ),
+              child: const Text('¿Olvidaste tu contraseña?'),
+            ),
           ),
-        ),
+          const SizedBox(height: 32),
+          _LoginButton(),
+          const Divider(height: 64),
+          Text(
+            '¿AUN NO TIENES UNA CUENTA?',
+            style: Theme.of(context).textTheme.caption,
+          ),
+          const SizedBox(height: 8),
+          _SignUpButton(),
+        ],
       ),
     );
   }
@@ -49,8 +60,7 @@ class _EmailInput extends StatelessWidget {
           onChanged: (email) => context.read<SignInCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            labelText: 'email',
-            helperText: '',
+            labelText: 'Correo electronico',
             errorText: state.email.invalid ? 'invalid email' : null,
           ),
         );
@@ -72,8 +82,7 @@ class _PasswordInput extends StatelessWidget {
           obscureText: true,
           keyboardType: TextInputType.visiblePassword,
           decoration: InputDecoration(
-            labelText: 'password',
-            helperText: '',
+            labelText: 'Contraseña',
             errorText: state.password.invalid ? 'invalid password' : null,
           ),
         );
@@ -90,18 +99,14 @@ class _LoginButton extends StatelessWidget {
       builder: (context, state) {
         return state.status.isSubmissionInProgress
             ? const CircularProgressIndicator()
-            : ElevatedButton(
-                key: const Key('signInForm_continue_raisedButton'),
-                onPressed: state.status.isValidated
-                    ? () => context.read<SignInCubit>().logInWithCredentials()
-                    : null,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text('INICIAR SESION'),
-                    SizedBox(width: 8),
-                    Icon(MdiIcons.arrowRight),
-                  ],
+            : SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  key: const Key('signInForm_continue_raisedButton'),
+                  onPressed: state.status.isValidated
+                      ? () => context.read<SignInCubit>().logInWithCredentials()
+                      : null,
+                  child: const Text('INICIAR SESION'),
                 ),
               );
       },
@@ -112,13 +117,13 @@ class _LoginButton extends StatelessWidget {
 class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return TextButton(
-      key: const Key('signInForm_createAccount_flatButton'),
-      onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
-      child: Text(
-        'CREATE ACCOUNT',
-        style: TextStyle(color: theme.primaryColor),
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        key: const Key('signInForm_createAccount_flatButton'),
+        onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
+        style: AppTheme.secondaryButton,
+        child: const Text('CREAR CUENTA'),
       ),
     );
   }
