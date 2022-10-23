@@ -22,28 +22,30 @@ class SignUpForm extends StatelessWidget {
             );
         }
       },
-      child: Align(
-        alignment: const Alignment(0, -1 / 3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _NameInput(),
-            const SizedBox(height: 8),
-            _BirthDateInput(),
-            const SizedBox(height: 8),
-            _GenreInput(),
-            const SizedBox(height: 8),
-            _UsernameInput(),
-            const SizedBox(height: 8),
-            _EmailInput(),
-            const SizedBox(height: 8),
-            _PasswordInput(),
-            const SizedBox(height: 8),
-            _ConfirmPasswordInput(),
-            const SizedBox(height: 8),
-            _SignUpButton(),
-          ],
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _NameInput(),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(flex: 2, child: _BirthDateInput()),
+              const SizedBox(width: 8),
+              Flexible(child: _GenreInput()),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _UsernameInput(),
+          const SizedBox(height: 16),
+          _EmailInput(),
+          const SizedBox(height: 16),
+          _PasswordInput(),
+          const SizedBox(height: 16),
+          _ConfirmPasswordInput(),
+          const SizedBox(height: 32),
+          _SignUpButton(),
+        ],
       ),
     );
   }
@@ -60,7 +62,7 @@ class _EmailInput extends StatelessWidget {
           onChanged: (email) => context.read<SignUpCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            labelText: 'email',
+            labelText: 'Correo electrónico',
             errorText: state.email.invalid ? 'invalid email' : null,
           ),
         );
@@ -82,7 +84,7 @@ class _PasswordInput extends StatelessWidget {
           obscureText: true,
           keyboardType: TextInputType.visiblePassword,
           decoration: InputDecoration(
-            labelText: 'password',
+            labelText: 'Contraseña',
             errorText: state.password.invalid ? 'invalid password' : null,
           ),
         );
@@ -106,7 +108,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
               .confirmedPasswordChanged(confirmPassword),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'confirm password',
+            labelText: 'Confirma tu contraseña',
             errorText: state.confirmedPassword.invalid
                 ? 'passwords do not match'
                 : null,
@@ -166,7 +168,7 @@ class _BirthDateInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'Fecha de nacimiento',
             hintText: 'DD/MM/AAAA',
-            errorText: state.birthdate.invalid ? 'invalid email' : null,
+            errorText: state.birthdate.invalid ? 'invalid date' : null,
           ),
         );
       },
@@ -195,25 +197,40 @@ class _GenreInputState extends State<_GenreInput> {
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.birthdate != current.birthdate,
       builder: (context, state) {
-        return DropdownButton<String>(
-          key: const Key('signUpForm_genreInput_dropdown'),
-          value: value,
-          icon: const Icon(MdiIcons.chevronDown),
-          elevation: 16,
-          onChanged: (genre) {
-            genre ??= widget.genreOptions.first;
-            context.read<SignUpCubit>().genreChanged(genre);
-            setState(() {
-              value = genre!;
-            });
-          },
-          items:
-              widget.genreOptions.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Género',
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle2!
+                  .copyWith(color: AppColors.flushOrange.shade700),
+            ),
+            DropdownButton<String>(
+              key: const Key('signUpForm_genreInput_dropdown'),
               value: value,
-              child: Text(value),
-            );
-          }).toList(),
+              icon: const Icon(MdiIcons.chevronDown),
+              isExpanded: true,
+              style: Theme.of(context).textTheme.caption,
+              elevation: 4,
+              onChanged: (genre) {
+                genre ??= widget.genreOptions.first;
+                context.read<SignUpCubit>().genreChanged(genre);
+                setState(() {
+                  value = genre!;
+                });
+              },
+              items: widget.genreOptions
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ],
         );
       },
     );
@@ -248,18 +265,15 @@ class _SignUpButton extends StatelessWidget {
       builder: (context, state) {
         return state.status.isSubmissionInProgress
             ? const CircularProgressIndicator()
-            : ElevatedButton(
-                key: const Key('signUpForm_continue_raisedButton'),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  backgroundColor: Colors.orangeAccent,
+            : SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  key: const Key('signUpForm_continue_raisedButton'),
+                  onPressed: state.status.isValidated
+                      ? () => context.read<SignUpCubit>().signUpFormSubmitted()
+                      : null,
+                  child: const Text('LISTO!'),
                 ),
-                onPressed: state.status.isValidated
-                    ? () => context.read<SignUpCubit>().signUpFormSubmitted()
-                    : null,
-                child: const Text('SIGN UP'),
               );
       },
     );
