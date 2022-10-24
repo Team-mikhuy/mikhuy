@@ -67,11 +67,11 @@ class AppTheme {
           elevation: MaterialStateProperty.all(0.5),
           shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16)),
+              borderRadius: BorderRadius.all(Radius.circular(4)),
             ),
           ),
           padding: MaterialStateProperty.all(
-            const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
           ),
         ),
       ),
@@ -91,26 +91,21 @@ class AppTheme {
           ),
           shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+              borderRadius: BorderRadius.all(Radius.circular(4)),
             ),
           ),
           padding: MaterialStateProperty.all(
-            const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
           ),
         ),
       ),
 
-      textSelectionTheme: TextSelectionThemeData(
-        cursorColor: AppColors.blueMalibu.shade700,
-      ),
       errorColor: AppColors.danger,
 
       /// Sets the default style of text fields to match
       /// the design. Mainly removes borders and applies a
       /// circular border radius to corners.
       inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: AppColors.flushOrange.shade50,
         floatingLabelStyle: AppTextStyle.headline2.copyWith(
           color: AppColors.flushOrange.shade700,
         ),
@@ -121,20 +116,20 @@ class AppTheme {
           color: AppColors.danger,
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: AppColors.flushOrange.shade300),
+          borderRadius: BorderRadius.circular(4),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.flushOrange.shade500),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(4),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: AppColors.danger),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(4),
         ),
         errorBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: AppColors.danger),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(4),
         ),
         contentPadding: const EdgeInsets.symmetric(
           vertical: 16,
@@ -153,6 +148,30 @@ class AppTheme {
             top: Radius.circular(24),
           ),
         ),
+      ),
+    );
+  }
+
+  static ButtonStyle get secondaryButton {
+    return ButtonStyle(
+      backgroundColor: MaterialStateProperty.all(AppColors.white),
+      foregroundColor:
+          MaterialStateProperty.all(AppColors.flushOrange.shade700),
+      overlayColor: MaterialStateProperty.all(AppColors.flushOrange.shade200),
+      elevation: MaterialStateProperty.all(0),
+      shape: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.pressed)) {
+          return const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+          );
+        }
+        return RoundedRectangleBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          side: BorderSide(color: AppColors.flushOrange.shade700),
+        );
+      }),
+      padding: MaterialStateProperty.all(
+        const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
       ),
     );
   }

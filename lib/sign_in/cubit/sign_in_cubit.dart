@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:mikhuy/shared/shared.dart';
+import 'package:mikhuy/sign_in/input_models/input_models.dart';
 
 part 'sign_in_state.dart';
 

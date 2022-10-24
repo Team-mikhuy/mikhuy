@@ -8,6 +8,7 @@ abstract class AppTextStyle {
     return _headerTextStyle.copyWith(
       fontSize: 22,
       letterSpacing: 0.07,
+      fontWeight: AppFontWeight.semilight,
     );
   }
 
@@ -28,9 +29,9 @@ abstract class AppTextStyle {
 
   static TextStyle get subtitle2 {
     return _bodyTextStyle.copyWith(
-      fontWeight: AppFontWeight.semibold,
+      fontWeight: AppFontWeight.bold,
       fontSize: 16,
-      letterSpacing: 0.03,
+      letterSpacing: 0.15,
     );
   }
 
@@ -80,6 +81,7 @@ abstract class AppTextStyle {
 
 /// Weights for text styles.
 abstract class AppFontWeight {
+  static const FontWeight semilight = FontWeight.w200;
   static const FontWeight regular = FontWeight.w400;
   static const FontWeight medium = FontWeight.w500;
   static const FontWeight semibold = FontWeight.w600;
