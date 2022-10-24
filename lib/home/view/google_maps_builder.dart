@@ -9,7 +9,7 @@ class GoogleMapsBuilder extends StatelessWidget {
   GoogleMapsBuilder({Key? key}) : super(key: key);
 
   final establishmentsRef =
-      FirebaseFirestore.instance.collection('establishments').withConverter<Establishment>(
+      FirebaseFirestore.instance.collection('establishment').withConverter<Establishment>(
             fromFirestore: (snapshots, _) => Establishment.fromJson(
               snapshots.data()!,
               snapshots.id,
