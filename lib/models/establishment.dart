@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Stablishment {
-  const Stablishment({
+class Establishment {
+  const Establishment({
     required this.id, 
     required this.address, 
     required this.closingTime, 
@@ -13,8 +13,8 @@ class Stablishment {
     required this.referenceNumber,
   });
 
-  factory Stablishment.fromJson(Map<String, dynamic> json, [String? id]) {
-    return Stablishment(
+  factory Establishment.fromJson(Map<String, dynamic> json, [String? id]) {
+    return Establishment(
       id: id ?? json['id'] as String ?? '',
       address: json['address'] as String,
       closingTime: DateTime.fromMicrosecondsSinceEpoch((json['closing_time'] as Timestamp).microsecondsSinceEpoch),
