@@ -61,6 +61,7 @@ class _GoogleMapsView extends StatelessWidget {
       onMapCreated: _onMapCreated,
       initialCameraPosition: _initialPosition,
       myLocationEnabled: true,
+      zoomGesturesEnabled: true,
     );
   }
 
