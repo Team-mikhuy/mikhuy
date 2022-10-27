@@ -59,19 +59,31 @@ class _GoogleMapsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final initialPosition = CameraPosition(
+    final cameraPosition = CameraPosition(
       target: LatLng(
-        context.select<GoogleMapsState, double>((value) => value.latitude),
-        context.select<GoogleMapsState, double>((value) => value.longitude),
+        context.select<GoogleMapsCubit, double>(
+          (value) => value.state.latitude,
+        ),
+        context.select<GoogleMapsCubit, double>(
+          (value) => value.state.longitude,
+        ),
       ),
       zoom: 13,
     );
 
-    return GoogleMap(
-      markers: _getmarkers(context),
-      onMapCreated: _onMapCreated,
-      initialCameraPosition: initialPosition,
-      myLocationEnabled: true,
+    return BlocListener<GoogleMapsCubit, GoogleMapsState>(
+      listener: (context, state) async {
+        final controller = await _controller.future;
+        await controller.moveCamera(
+          CameraUpdate.newCameraPosition(cameraPosition),
+        );
+      },
+      child: GoogleMap(
+        markers: _getmarkers(context),
+        onMapCreated: _onMapCreated,
+        initialCameraPosition: cameraPosition,
+        myLocationEnabled: true,
+      ),
     );
   }
 
