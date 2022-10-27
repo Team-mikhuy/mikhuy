@@ -61,8 +61,12 @@ class _GoogleMapsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final initialPosition = CameraPosition(
       target: LatLng(
-        context.select<GoogleMapsState, double>((value) => value.latitude),
-        context.select<GoogleMapsState, double>((value) => value.longitude),
+        context.select<GoogleMapsCubit, double>(
+          (value) => value.state.latitude,
+        ),
+        context.select<GoogleMapsCubit, double>(
+          (value) => value.state.longitude,
+        ),
       ),
       zoom: 13,
     );
