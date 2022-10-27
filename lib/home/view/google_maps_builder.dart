@@ -2,20 +2,23 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mikhuy/models/establishment.dart';
+import 'package:mikhuy/home/cubit/google_maps_cubit.dart';
+import 'package:models/establishment.dart';
 
 class GoogleMapsBuilder extends StatelessWidget {
-  GoogleMapsBuilder({Key? key}) : super(key: key);
+  GoogleMapsBuilder({super.key});
 
-  final establishmentsRef =
-      FirebaseFirestore.instance.collection('establishment').withConverter<Establishment>(
-            fromFirestore: (snapshots, _) => Establishment.fromJson(
-              snapshots.data()!,
-              snapshots.id,
-            ),
-            toFirestore: (establishments, _) => establishments.toJson(),
-          );
+  final establishmentsRef = FirebaseFirestore.instance
+      .collection('establishment')
+      .withConverter<Establishment>(
+        fromFirestore: (snapshots, _) => Establishment.fromJson(
+          snapshots.data()!,
+          snapshots.id,
+        ),
+        toFirestore: (establishments, _) => establishments.toJson(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +32,12 @@ class GoogleMapsBuilder extends StatelessWidget {
         }
 
         if (snapshot.hasData) {
-          final establishmentss = snapshot.data!.docs.map((e) => e.data()).toList();
-          return _GoogleMapsView(establishmentss);
+          final establishmentss =
+              snapshot.data!.docs.map((e) => e.data()).toList();
+          return BlocProvider(
+            create: (context) => GoogleMapsCubit()..verifyLocationPermission(),
+            child: _GoogleMapsView(establishmentss),
+          );
         }
 
         return const Center(child: CircularProgressIndicator());
@@ -40,15 +47,11 @@ class GoogleMapsBuilder extends StatelessWidget {
 }
 
 class _GoogleMapsView extends StatelessWidget {
-  _GoogleMapsView(this.establishmentss, {Key? key}) : super(key: key);
+  _GoogleMapsView(this.establishmentss);
 
   final List<Establishment> establishmentss;
 
   final Completer<GoogleMapController> _controller = Completer();
-  final _initialPosition = const CameraPosition(
-    target: LatLng(-17.378236201337288, -66.16146446351347),
-    zoom: 13,
-  );
 
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
@@ -56,27 +59,38 @@ class _GoogleMapsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final initialPosition = CameraPosition(
+      target: LatLng(
+        context.select<GoogleMapsState, double>((value) => value.latitude),
+        context.select<GoogleMapsState, double>((value) => value.longitude),
+      ),
+      zoom: 13,
+    );
+
     return GoogleMap(
       markers: _getmarkers(context),
       onMapCreated: _onMapCreated,
-      initialCameraPosition: _initialPosition,
+      initialCameraPosition: initialPosition,
       myLocationEnabled: true,
-      zoomGesturesEnabled: true,
     );
   }
 
   Set<Marker> _getmarkers(BuildContext context) {
     return establishmentss
-        .map((e) => Marker(
+        .map(
+          (e) => Marker(
             markerId: MarkerId(e.id),
             position: LatLng(e.latitude, e.longitude),
             infoWindow: InfoWindow(title: e.name),
-            onTap: () {/*
+            onTap: () {
+              /*
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => establishmentsPage(e)),
               );*/
-            }))
+            },
+          ),
+        )
         .toSet();
   }
 }
