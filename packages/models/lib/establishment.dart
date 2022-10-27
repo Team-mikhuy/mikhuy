@@ -15,7 +15,7 @@ class Establishment {
 
   factory Establishment.fromJson(Map<String, dynamic> json, [String? id]) {
     return Establishment(
-      id: id ?? json['id'] as String ?? '',
+      id: id ?? json['id'] as String,
       address: json['address'] as String,
       closingTime: DateTime.fromMicrosecondsSinceEpoch(
         (json['closing_time'] as Timestamp).microsecondsSinceEpoch,
