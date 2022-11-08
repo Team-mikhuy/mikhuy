@@ -35,9 +35,7 @@ class _EstablishmentsListView extends StatelessWidget {
       child: RefreshIndicator(
         onRefresh: () => context.read<GoogleMapsCubit>().getEstablisments(),
         child: ListView.separated(
-          separatorBuilder: (context, index) => const SizedBox(
-            height: 16,
-          ),
+          separatorBuilder: (context, index) => const Divider(height: 16),
           itemCount: establishments.length,
           itemBuilder: (context, index) => EstablishmentListItem(
             establishments[index],

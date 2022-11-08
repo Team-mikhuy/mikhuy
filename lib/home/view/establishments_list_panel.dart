@@ -40,7 +40,7 @@ class EstablishmentsListPanel extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .headline2!
-                  .copyWith(color: AppColors.grey.shade700),
+                  .copyWith(color: AppColors.grey.shade800),
             ),
             const SizedBox(height: 12),
             BlocProvider<GoogleMapsCubit>(
