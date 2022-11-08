@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-class Establishment {
+class Establishment extends Equatable {
   const Establishment({
     required this.id,
     required this.address,
@@ -52,4 +53,17 @@ class Establishment {
       'reference_number': referenceNumber,
     };
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        address,
+        closingTime,
+        googleMapsUrl,
+        latitude,
+        longitude,
+        name,
+        openingTime,
+        referenceNumber,
+      ];
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
@@ -11,6 +13,7 @@ class GoogleMapsCubit extends Cubit<GoogleMapsState> {
   GoogleMapsCubit() : super(const GoogleMapsState());
 
   final Location _location = Location();
+  StreamSubscription<QuerySnapshot<Establishment>>? _subscription;
   final _establishmentsRef = FirebaseFirestore.instance
       .collection('establishment')
       .withConverter<Establishment>(
@@ -48,6 +51,25 @@ class GoogleMapsCubit extends Cubit<GoogleMapsState> {
     try {
       final query = await _establishmentsRef.get();
       final establishments = query.docs.map((e) => e.data()).toList();
+
+      _subscription = _establishmentsRef.snapshots().listen(
+        (event) {
+          final index = state.establishments
+              .indexWhere((element) => element.id == event.docs.first.id);
+
+          emit(
+            state.copyWith(
+              establishments: state.establishments
+                ..replaceRange(
+                  index,
+                  index + 1,
+                  event.docs.map((e) => e.data()),
+                ),
+            ),
+          );
+        },
+      );
+
       emit(
         state.copyWith(
           establishments: establishments,
