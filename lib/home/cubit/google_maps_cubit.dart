@@ -13,7 +13,6 @@ class GoogleMapsCubit extends Cubit<GoogleMapsState> {
   GoogleMapsCubit() : super(const GoogleMapsState());
 
   final Location _location = Location();
-  StreamSubscription<QuerySnapshot<Establishment>>? _subscription;
   final _establishmentsRef = FirebaseFirestore.instance
       .collection('establishment')
       .withConverter<Establishment>(
@@ -52,7 +51,7 @@ class GoogleMapsCubit extends Cubit<GoogleMapsState> {
       final query = await _establishmentsRef.get();
       final establishments = query.docs.map((e) => e.data()).toList();
 
-      _subscription = _establishmentsRef.snapshots().listen(
+      _establishmentsRef.snapshots().listen(
         (event) {
           final index = state.establishments
               .indexWhere((element) => element.id == event.docs.first.id);

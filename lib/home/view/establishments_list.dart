@@ -100,7 +100,7 @@ class EstablishmentListItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                isOpen ? 'Abierto ahora' : 'Cerrado por el momento',
+                isOpen ? 'Abierto ahora' : 'Cerrado',
                 style: Theme.of(context).textTheme.overline!.copyWith(
                       color: isOpen ? AppColors.success : AppColors.danger,
                     ),
