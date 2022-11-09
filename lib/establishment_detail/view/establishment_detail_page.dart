@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mikhuy/theme/app_colors.dart';
 import 'package:models/establishment.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EstablishmentDetailPage extends StatelessWidget {
-  final Establishment _establishment;
   const EstablishmentDetailPage(this._establishment, {super.key});
+  final Establishment _establishment;
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +30,15 @@ class EstablishmentDetailPage extends StatelessWidget {
 
     final isOpen = now.isAfter(openingTime) && now.isBefore(closingTime);
 
-    // TODO: implement build
     return Scaffold(
-      appBar: new AppBar(
-        title: new Text(_establishment.name),
-        leading: new IconButton(
-            onPressed: () => {
-                  Navigator.of(context).pop(),
-                },
-            icon: new Icon(MdiIcons.arrowLeft)),
+      appBar: AppBar(
+        title: Text(_establishment.name),
+        leading: IconButton(
+          onPressed: () => {
+            Navigator.of(context).pop(),
+          },
+          icon: Icon(MdiIcons.arrowLeft),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -49,16 +49,15 @@ class EstablishmentDetailPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: () => {},
+                  onTap: _launchURL,
                   child: Row(
                     children: [
                       Icon(MdiIcons.mapMarkerOutline),
                       Text(
                         _establishment.address,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(color: Colors.blue),
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            decoration: TextDecoration.underline,
+                          ),
                       ),
                     ],
                   ),
@@ -81,14 +80,7 @@ class EstablishmentDetailPage extends StatelessWidget {
               height: 4,
             ),
             Text(
-              'Todos los días de ' +
-                  _establishment.openingTime.hour.toString() +
-                  ':' +
-                  _establishment.openingTime.minute.toString() +
-                  ' a ' +
-                  _establishment.closingTime.hour.toString() +
-                  ':' +
-                  _establishment.closingTime.minute.toString(),
+              'Todos los días de ${_establishment.openingTime.hour}:${_establishment.openingTime.minute} a ${_establishment.closingTime.hour}:${_establishment.closingTime.minute}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(
@@ -113,15 +105,22 @@ class EstablishmentDetailPage extends StatelessWidget {
     );
   }
 
-  /*_launchURL() async {
-    final url = 'https://www.google.com/maps/search/?api=1&query=' +
-                            _establishment.latitude.toString() +
-                            '%2C' +
-                            _establishment.longitude.toString();
-    if (await canLaunch(url)) {
-      await launch(url);
+  // ignore: inference_failure_on_function_return_type
+  _launchURL() async {
+    final url = Uri.parse(
+        'https://www.google.com/maps/search/?api=1&query=${_establishment.latitude}%2C${_establishment.longitude}');
+    final nativeAppLaunchSucceeded = await launchUrl(
+      url,
+      mode: LaunchMode.externalNonBrowserApplication,
+    );
+    if (!nativeAppLaunchSucceeded) {
+      await launchUrl(
+        url,
+        mode: LaunchMode.inAppWebView,
+      );
     } else {
-      throw 'Could not launch $url';
+      //Need message
+      print('Not found');
     }
-  }*/
+  }
 }
