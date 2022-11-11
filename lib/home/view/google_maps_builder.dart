@@ -1,43 +1,28 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mikhuy/establishment_detail/view/establishment_detail_page.dart';
 import 'package:mikhuy/home/cubit/google_maps_cubit.dart';
+import 'package:mikhuy/shared/enums/request_status.dart';
 import 'package:models/establishment.dart';
 
 class GoogleMapsBuilder extends StatelessWidget {
-  GoogleMapsBuilder({super.key});
-
-  final establishmentsRef = FirebaseFirestore.instance
-      .collection('establishment')
-      .withConverter<Establishment>(
-        fromFirestore: (snapshots, _) => Establishment.fromJson(
-          snapshots.data()!,
-          snapshots.id,
-        ),
-        toFirestore: (establishments, _) => establishments.toJson(),
-      );
+  const GoogleMapsBuilder({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: establishmentsRef.get(),
-      builder: (_, AsyncSnapshot<QuerySnapshot<Establishment>> snapshot) {
-        if (snapshot.hasError) {
+    return BlocBuilder<GoogleMapsCubit, GoogleMapsState>(
+      builder: (context, state) {
+        if (state.requestStatus == RequestStatus.failed) {
           return const Center(
-            child: Text('Ocurrio un error inesperado :('),
+            child: Text('Ups! ha ocurrido un error inesperado'),
           );
         }
 
-        if (snapshot.hasData) {
-          final establishmentss =
-              snapshot.data!.docs.map((e) => e.data()).toList();
-          return BlocProvider(
-            create: (context) => GoogleMapsCubit()..verifyLocationPermission(),
-            child: _GoogleMapsView(establishmentss),
-          );
+        if (state.requestStatus == RequestStatus.completed) {
+          return _GoogleMapsView();
         }
 
         return const Center(child: CircularProgressIndicator());
@@ -47,9 +32,7 @@ class GoogleMapsBuilder extends StatelessWidget {
 }
 
 class _GoogleMapsView extends StatelessWidget {
-  _GoogleMapsView(this.establishmentss);
-
-  final List<Establishment> establishmentss;
+  _GoogleMapsView();
 
   final Completer<GoogleMapController> _controller = Completer();
 
@@ -88,18 +71,20 @@ class _GoogleMapsView extends StatelessWidget {
   }
 
   Set<Marker> _getmarkers(BuildContext context) {
-    return establishmentss
+    return context
+        .select<GoogleMapsCubit, List<Establishment>>(
+          (value) => value.state.establishments,
+        )
         .map(
           (e) => Marker(
             markerId: MarkerId(e.id),
             position: LatLng(e.latitude, e.longitude),
             infoWindow: InfoWindow(title: e.name),
             onTap: () {
-              /*
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => establishmentsPage(e)),
-              );*/
+                MaterialPageRoute(builder: (context) => EstablishmentDetailPage(e)),
+              );
             },
           ),
         )

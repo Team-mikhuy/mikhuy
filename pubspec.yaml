@@ -30,6 +30,7 @@ dependencies:
   models:
     path: packages/models
   permission_handler: ^10.2.0
+  url_launcher: ^6.1.6
 
 dev_dependencies:
   bloc_test: ^9.1.0

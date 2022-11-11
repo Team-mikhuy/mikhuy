@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:location/location.dart';
 import 'package:mikhuy/shared/enums/request_status.dart';
@@ -9,27 +10,52 @@ part 'google_maps_state.dart';
 class GoogleMapsCubit extends Cubit<GoogleMapsState> {
   GoogleMapsCubit() : super(const GoogleMapsState());
 
-  final Location location = Location();
+  final Location _location = Location();
+  final _establishmentsRef = FirebaseFirestore.instance
+      .collection('establishment')
+      .withConverter<Establishment>(
+        fromFirestore: (snapshots, _) => Establishment.fromJson(
+          snapshots.data()!,
+          snapshots.id,
+        ),
+        toFirestore: (establishments, _) => establishments.toJson(),
+      );
 
   Future<void> verifyLocationPermission() async {
-    var serviceEnabled = await location.serviceEnabled();
+    var serviceEnabled = await _location.serviceEnabled();
     if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
+      serviceEnabled = await _location.requestService();
     }
 
-    var permissionGranted = await location.hasPermission();
+    var permissionGranted = await _location.hasPermission();
     if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
+      permissionGranted = await _location.requestPermission();
     }
 
     if (serviceEnabled && permissionGranted == PermissionStatus.granted) {
-      final locationData = await location.getLocation();
+      final locationData = await _location.getLocation();
       emit(
         state.copyWith(
           latitude: locationData.latitude,
           longitude: locationData.longitude,
         ),
       );
+    }
+  }
+
+  Future<void> getEstablisments() async {
+    emit(state.copyWith(requestStatus: RequestStatus.inProgress));
+    try {
+      final query = await _establishmentsRef.get();
+      final establishments = query.docs.map((e) => e.data()).toList();
+      emit(
+        state.copyWith(
+          establishments: establishments,
+          requestStatus: RequestStatus.completed,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(requestStatus: RequestStatus.failed));
     }
   }
 }
