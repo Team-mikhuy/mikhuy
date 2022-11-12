@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:mikhuy/home/cubit/google_maps_cubit.dart';
 import 'package:mikhuy/theme/theme.dart';
 
 class EstablishmentsSearchBar extends StatelessWidget {
@@ -26,9 +28,9 @@ class EstablishmentsSearchBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Expanded(
+          Expanded(
             child: TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Establecimiento, producto...',
                 contentPadding: EdgeInsets.all(4),
                 enabledBorder: OutlineInputBorder(
@@ -38,6 +40,13 @@ class EstablishmentsSearchBar extends StatelessWidget {
                   borderSide: BorderSide(color: Colors.transparent),
                 ),
               ),
+              onChanged: (value) {
+                if (value.isEmpty) {
+                  context.read<GoogleMapsCubit>().getEstablisments();
+                }
+              },
+              onSubmitted: (value) =>
+                  context.read<GoogleMapsCubit>().searchEstablishments(value),
             ),
           ),
           IconButton(

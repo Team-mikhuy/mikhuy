@@ -12,6 +12,7 @@ part 'google_maps_state.dart';
 class GoogleMapsCubit extends Cubit<GoogleMapsState> {
   GoogleMapsCubit() : super(const GoogleMapsState());
 
+  StreamSubscription<QuerySnapshot<Establishment>>? _establishmentsSub;
   final Location _location = Location();
   final _establishmentsRef = FirebaseFirestore.instance
       .collection('establishment')
@@ -87,5 +88,40 @@ class GoogleMapsCubit extends Cubit<GoogleMapsState> {
         .get();
 
     return snapshot.docs.map((e) => e.data()).toList();
+  }
+
+  Future<void> searchEstablishments(String criteria) async {
+    if (criteria.isEmpty) return;
+    emit(state.copyWith(requestStatus: RequestStatus.inProgress));
+
+    try {
+      await _establishmentsSub?.cancel();
+
+      _establishmentsRef.snapshots().listen(
+        (event) async {
+          final establishmentsTemp = event.docs.map((e) => e.data()).toList();
+          final establishments = <Establishment>[];
+
+          for (final establishment in establishmentsTemp) {
+            final products = await _getProducts(establishment.id);
+            if (products.isEmpty) continue;
+
+            if (establishment.name.contains(criteria) ||
+                products.any((element) => element.name.contains(criteria))) {
+              establishments.add(establishment.copyWith(products: products));
+            }
+          }
+
+          emit(
+            state.copyWith(
+              establishments: establishments,
+              requestStatus: RequestStatus.completed,
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      emit(state.copyWith(requestStatus: RequestStatus.failed));
+    }
   }
 }

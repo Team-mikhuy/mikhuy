@@ -49,13 +49,15 @@ class _EstablishmentsListView extends StatelessWidget {
     return Expanded(
       child: RefreshIndicator(
         onRefresh: () => context.read<GoogleMapsCubit>().getEstablisments(),
-        child: ListView.separated(
-          separatorBuilder: (context, index) => const Divider(height: 16),
-          itemCount: establishments.length,
-          itemBuilder: (context, index) => EstablishmentListItem(
-            establishments[index],
-          ),
-        ),
+        child: establishments.isNotEmpty
+            ? ListView.separated(
+                separatorBuilder: (context, index) => const Divider(height: 16),
+                itemCount: establishments.length,
+                itemBuilder: (context, index) => EstablishmentListItem(
+                  establishments[index],
+                ),
+              )
+            : const Text('No se encontraron resultados 👀'),
       ),
     );
   }
