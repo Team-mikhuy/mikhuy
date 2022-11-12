@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
+import 'package:models/product.dart';
 
-class Establishment {
+class Establishment extends Equatable {
   const Establishment({
     required this.id,
     required this.address,
@@ -11,6 +13,7 @@ class Establishment {
     required this.name,
     required this.openingTime,
     required this.referenceNumber,
+    this.products = const [],
   });
 
   factory Establishment.fromJson(Map<String, dynamic> json, [String? id]) {
@@ -40,6 +43,7 @@ class Establishment {
   final String name;
   final DateTime openingTime;
   final String referenceNumber;
+  final List<Product> products;
 
   Map<String, dynamic> toJson() {
     return {
@@ -51,5 +55,45 @@ class Establishment {
       'opening_time': openingTime,
       'reference_number': referenceNumber,
     };
+  }
+
+  @override
+  List<Object?> get props => [
+        id,
+        address,
+        closingTime,
+        googleMapsUrl,
+        latitude,
+        longitude,
+        name,
+        openingTime,
+        referenceNumber,
+        products,
+      ];
+
+  Establishment copyWith({
+    String? id,
+    String? address,
+    DateTime? closingTime,
+    String? googleMapsUrl,
+    double? latitude,
+    double? longitude,
+    String? name,
+    DateTime? openingTime,
+    String? referenceNumber,
+    List<Product>? products,
+  }) {
+    return Establishment(
+      id: id ?? this.id,
+      address: address ?? this.address,
+      closingTime: closingTime ?? this.closingTime,
+      googleMapsUrl: googleMapsUrl ?? this.googleMapsUrl,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      name: name ?? this.name,
+      openingTime: openingTime ?? this.openingTime,
+      referenceNumber: referenceNumber ?? this.referenceNumber,
+      products: products ?? this.products,
+    );
   }
 }

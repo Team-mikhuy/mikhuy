@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mikhuy/app/app.dart';
-import 'package:mikhuy/home/cubit/google_maps_cubit.dart';
+import 'package:mikhuy/home/cubit/establishment_list_cubit.dart';
+import 'package:mikhuy/home/view/establishments_list_panel.dart';
+import 'package:mikhuy/home/view/establishments_search_bar.dart';
 import 'package:mikhuy/home/view/google_maps_builder.dart';
 
 class HomePage extends StatelessWidget {
@@ -10,23 +11,28 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          BlocProvider<GoogleMapsCubit>(
-            create: (context) => GoogleMapsCubit()
-              ..verifyLocationPermission()
-              ..getEstablisments(),
-            child: const GoogleMapsBuilder(),
+      body: SafeArea(
+        child: BlocProvider<EstablishmentListCubit>(
+          create: (context) => EstablishmentListCubit()
+            ..verifyLocationPermission()
+            ..getEstablisments(),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              const GoogleMapsBuilder(),
+              Positioned.fill(
+                child: Column(
+                  children: const [
+                    EstablishmentsSearchBar(),
+                    Expanded(
+                      child: EstablishmentsListPanel(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Positioned(
-            bottom: 0,
-            child: TextButton(
-              onPressed: () =>
-                  context.read<AppBloc>().add(AppLogoutRequested()),
-              child: const Text('Cerrar sesion'),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -1,7 +1,7 @@
-part of 'google_maps_cubit.dart';
+part of 'establishment_list_cubit.dart';
 
-class GoogleMapsState extends Equatable {
-  const GoogleMapsState({
+class EstablishmentListState extends Equatable {
+  const EstablishmentListState({
     this.establishments = const [],
     this.requestStatus = RequestStatus.initial,
     this.latitude = -17.378236201337288,
@@ -21,13 +21,13 @@ class GoogleMapsState extends Equatable {
         longitude,
       ];
 
-  GoogleMapsState copyWith({
+  EstablishmentListState copyWith({
     List<Establishment>? establishments,
     RequestStatus? requestStatus,
     double? latitude,
     double? longitude,
   }) {
-    return GoogleMapsState(
+    return EstablishmentListState(
       establishments: establishments ?? this.establishments,
       requestStatus: requestStatus ?? this.requestStatus,
       latitude: latitude ?? this.latitude,
