@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mikhuy/home/cubit/google_maps_cubit.dart';
+import 'package:mikhuy/home/cubit/establishment_list_cubit.dart';
 import 'package:mikhuy/theme/theme.dart';
 
 class EstablishmentsSearchBar extends StatelessWidget {
@@ -42,11 +42,12 @@ class EstablishmentsSearchBar extends StatelessWidget {
               ),
               onChanged: (value) {
                 if (value.isEmpty) {
-                  context.read<GoogleMapsCubit>().getEstablisments();
+                  context.read<EstablishmentListCubit>().getEstablisments();
                 }
               },
-              onSubmitted: (value) =>
-                  context.read<GoogleMapsCubit>().searchEstablishments(value),
+              onSubmitted: (value) => context
+                  .read<EstablishmentListCubit>()
+                  .searchEstablishments(value),
             ),
           ),
           IconButton(

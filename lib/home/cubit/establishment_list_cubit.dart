@@ -7,10 +7,10 @@ import 'package:location/location.dart';
 import 'package:mikhuy/shared/enums/request_status.dart';
 import 'package:models/models.dart';
 
-part 'google_maps_state.dart';
+part 'establishment_list_state.dart';
 
-class GoogleMapsCubit extends Cubit<GoogleMapsState> {
-  GoogleMapsCubit() : super(const GoogleMapsState());
+class EstablishmentListCubit extends Cubit<EstablishmentListState> {
+  EstablishmentListCubit() : super(const EstablishmentListState());
 
   StreamSubscription<QuerySnapshot<Establishment>>? _establishmentsSub;
   final Location _location = Location();

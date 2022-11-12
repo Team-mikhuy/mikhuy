@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mikhuy/home/cubit/google_maps_cubit.dart';
+import 'package:mikhuy/home/cubit/establishment_list_cubit.dart';
 import 'package:mikhuy/shared/enums/request_status.dart';
 import 'package:models/establishment.dart';
 
@@ -12,7 +12,7 @@ class GoogleMapsBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GoogleMapsCubit, GoogleMapsState>(
+    return BlocBuilder<EstablishmentListCubit, EstablishmentListState>(
       builder: (context, state) {
         if (state.requestStatus == RequestStatus.failed) {
           return const Center(
@@ -43,17 +43,17 @@ class _GoogleMapsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final cameraPosition = CameraPosition(
       target: LatLng(
-        context.select<GoogleMapsCubit, double>(
+        context.select<EstablishmentListCubit, double>(
           (value) => value.state.latitude,
         ),
-        context.select<GoogleMapsCubit, double>(
+        context.select<EstablishmentListCubit, double>(
           (value) => value.state.longitude,
         ),
       ),
       zoom: 13,
     );
 
-    return BlocListener<GoogleMapsCubit, GoogleMapsState>(
+    return BlocListener<EstablishmentListCubit, EstablishmentListState>(
       listener: (context, state) async {
         final controller = await _controller.future;
         await controller.moveCamera(
@@ -72,7 +72,7 @@ class _GoogleMapsView extends StatelessWidget {
 
   Set<Marker> _getmarkers(BuildContext context) {
     return context
-        .select<GoogleMapsCubit, List<Establishment>>(
+        .select<EstablishmentListCubit, List<Establishment>>(
           (value) => value.state.establishments,
         )
         .map(

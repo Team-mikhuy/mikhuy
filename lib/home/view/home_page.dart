@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mikhuy/home/cubit/google_maps_cubit.dart';
+import 'package:mikhuy/home/cubit/establishment_list_cubit.dart';
 import 'package:mikhuy/home/view/establishments_list_panel.dart';
 import 'package:mikhuy/home/view/establishments_search_bar.dart';
 import 'package:mikhuy/home/view/google_maps_builder.dart';
@@ -12,8 +12,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: BlocProvider<GoogleMapsCubit>(
-          create: (context) => GoogleMapsCubit()
+        child: BlocProvider<EstablishmentListCubit>(
+          create: (context) => EstablishmentListCubit()
             ..verifyLocationPermission()
             ..getEstablisments(),
           child: Stack(

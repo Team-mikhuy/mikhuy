@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mikhuy/home/cubit/google_maps_cubit.dart';
+import 'package:mikhuy/home/cubit/establishment_list_cubit.dart';
 import 'package:mikhuy/home/view/establishments_list.dart';
 import 'package:mikhuy/theme/theme.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -87,8 +87,8 @@ class _PanelContent extends StatelessWidget {
             ],
           ),
         ),
-        BlocProvider<GoogleMapsCubit>.value(
-          value: context.read<GoogleMapsCubit>(),
+        BlocProvider<EstablishmentListCubit>.value(
+          value: context.read<EstablishmentListCubit>(),
           child: const EstablishmentsList(),
         ),
       ],
