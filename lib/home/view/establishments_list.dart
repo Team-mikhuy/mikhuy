@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mikhuy/home/cubit/google_maps_cubit.dart';
+import 'package:mikhuy/home/cubit/establishment_list_cubit.dart';
 import 'package:mikhuy/shared/enums/request_status.dart';
 import 'package:mikhuy/theme/theme.dart';
 import 'package:models/establishment.dart';
@@ -10,7 +10,7 @@ class EstablishmentsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GoogleMapsCubit, GoogleMapsState>(
+    return BlocBuilder<EstablishmentListCubit, EstablishmentListState>(
       builder: (context, state) {
         if (state.requestStatus == RequestStatus.completed) {
           return const _EstablishmentsListView();
@@ -23,7 +23,7 @@ class EstablishmentsList extends StatelessWidget {
                 const Text('Ups! ha ocurrido un error inesperado :('),
                 TextButton(
                   onPressed: () =>
-                      context.read<GoogleMapsCubit>().getEstablisments(),
+                      context.read<EstablishmentListCubit>().getEstablisments(),
                   child: const Text('Reintentar'),
                 )
               ],
@@ -42,20 +42,24 @@ class _EstablishmentsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final establishments = context.select<GoogleMapsCubit, List<Establishment>>(
+    final establishments =
+        context.select<EstablishmentListCubit, List<Establishment>>(
       (value) => value.state.establishments,
     );
 
     return Expanded(
       child: RefreshIndicator(
-        onRefresh: () => context.read<GoogleMapsCubit>().getEstablisments(),
-        child: ListView.separated(
-          separatorBuilder: (context, index) => const Divider(height: 16),
-          itemCount: establishments.length,
-          itemBuilder: (context, index) => EstablishmentListItem(
-            establishments[index],
-          ),
-        ),
+        onRefresh: () =>
+            context.read<EstablishmentListCubit>().getEstablisments(),
+        child: establishments.isNotEmpty
+            ? ListView.separated(
+                separatorBuilder: (context, index) => const Divider(height: 16),
+                itemCount: establishments.length,
+                itemBuilder: (context, index) => EstablishmentListItem(
+                  establishments[index],
+                ),
+              )
+            : const Text('No se encontraron resultados 👀'),
       ),
     );
   }
