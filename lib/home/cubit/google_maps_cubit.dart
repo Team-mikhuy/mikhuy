@@ -89,7 +89,10 @@ class GoogleMapsCubit extends Cubit<GoogleMapsState> {
         )
         .get();
 
-    return snapshot.docs.map((e) => e.data()).toList();
+    return snapshot.docs
+        .map((e) => e.data())
+        .where((element) => element.stock > 0)
+        .toList();
   }
 
   Future<void> searchEstablishments(String criteria) async {
