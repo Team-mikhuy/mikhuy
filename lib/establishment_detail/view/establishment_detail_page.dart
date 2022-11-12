@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:mikhuy/establishment_detail/cubit/products_list_cubit.dart';
 import 'package:mikhuy/establishment_detail/view/products_list.dart';
 import 'package:mikhuy/theme/app_colors.dart';
 import 'package:models/establishment.dart';
@@ -57,8 +59,8 @@ class EstablishmentDetailPage extends StatelessWidget {
                       Text(
                         _establishment.address,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            decoration: TextDecoration.underline,
-                          ),
+                              decoration: TextDecoration.underline,
+                            ),
                       ),
                     ],
                   ),
@@ -100,7 +102,11 @@ class EstablishmentDetailPage extends StatelessWidget {
               'Productos disponibles',
               style: Theme.of(context).textTheme.subtitle1,
             ),
-            ProductsList(_establishment),
+            BlocProvider<ProductsListCubit>(
+              create: (context) => ProductsListCubit()
+                ..getProductsByEstablishmentAlphabet(_establishment.id),
+              child: ProductsList(_establishment),
+            ),
           ],
         ),
       ),
