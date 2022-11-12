@@ -43,8 +43,8 @@ class EstablishmentsListPanel extends StatelessWidget {
                   .copyWith(color: AppColors.grey.shade800),
             ),
             const SizedBox(height: 12),
-            BlocProvider<GoogleMapsCubit>(
-              create: (context) => GoogleMapsCubit()..getEstablisments(),
+            BlocProvider<GoogleMapsCubit>.value(
+              value: context.read<GoogleMapsCubit>(),
               child: const EstablishmentsList(),
             ),
           ],

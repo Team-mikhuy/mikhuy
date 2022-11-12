@@ -12,26 +12,26 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            BlocProvider<GoogleMapsCubit>(
-              create: (context) => GoogleMapsCubit()
-                ..verifyLocationPermission()
-                ..getEstablisments(),
-              child: const GoogleMapsBuilder(),
-            ),
-            Positioned.fill(
-              child: Column(
-                children: const [
-                  EstablishmentsSearchBar(),
-                  Expanded(
-                    child: EstablishmentsListPanel(),
-                  ),
-                ],
+        child: BlocProvider<GoogleMapsCubit>(
+          create: (context) => GoogleMapsCubit()
+            ..verifyLocationPermission()
+            ..getEstablisments(),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              const GoogleMapsBuilder(),
+              Positioned.fill(
+                child: Column(
+                  children: const [
+                    EstablishmentsSearchBar(),
+                    Expanded(
+                      child: EstablishmentsListPanel(),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -14,7 +14,6 @@ class Establishment extends Equatable {
     required this.openingTime,
     required this.referenceNumber,
     this.products = const [],
-    this.availableProducts = 0,
   });
 
   factory Establishment.fromJson(Map<String, dynamic> json, [String? id]) {
@@ -45,7 +44,6 @@ class Establishment extends Equatable {
   final DateTime openingTime;
   final String referenceNumber;
   final List<Product> products;
-  final int availableProducts;
 
   Map<String, dynamic> toJson() {
     return {
@@ -71,7 +69,6 @@ class Establishment extends Equatable {
         openingTime,
         referenceNumber,
         products,
-        availableProducts,
       ];
 
   Establishment copyWith({
@@ -85,7 +82,6 @@ class Establishment extends Equatable {
     DateTime? openingTime,
     String? referenceNumber,
     List<Product>? products,
-    int? availableProducts,
   }) {
     return Establishment(
       id: id ?? this.id,
@@ -97,7 +93,7 @@ class Establishment extends Equatable {
       name: name ?? this.name,
       openingTime: openingTime ?? this.openingTime,
       referenceNumber: referenceNumber ?? this.referenceNumber,
-      availableProducts: availableProducts ?? this.availableProducts,
+      products: products ?? this.products,
     );
   }
 }

@@ -16,6 +16,21 @@ class EstablishmentsList extends StatelessWidget {
           return const _EstablishmentsListView();
         }
 
+        if (state.requestStatus == RequestStatus.failed) {
+          return Center(
+            child: Column(
+              children: [
+                const Text('Ups! ha ocurrido un error inesperado :('),
+                TextButton(
+                  onPressed: () =>
+                      context.read<GoogleMapsCubit>().getEstablisments(),
+                  child: const Text('Reintentar'),
+                )
+              ],
+            ),
+          );
+        }
+
         return const Center(child: CircularProgressIndicator());
       },
     );
@@ -103,11 +118,19 @@ class EstablishmentListItem extends StatelessWidget {
                       color: isOpen ? AppColors.success : AppColors.danger,
                     ),
               ),
-              const Text('35 productos disponibles'),
+              Text('${_getProductsCount()} productos disponibles'),
             ],
           ),
         ],
       ),
     );
+  }
+
+  int _getProductsCount() {
+    var count = 0;
+    for (final product in _establishment.products) {
+      count += product.stock;
+    }
+    return count;
   }
 }

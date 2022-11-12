@@ -12,10 +12,10 @@ class Product extends Equatable {
   factory Product.fromJson(Map<String, dynamic> json, [String? id]) {
     return Product(
       id: id ?? json['id'] as String,
-      name: json['address'] as String,
+      name: json['name'] as String,
       imageUrl: json['imageUrl'] as String,
       stock: json['stock'] as int,
-      price: json['price'] as double,
+      price: (json['price'] as num).toDouble(),
     );
   }
 

@@ -61,10 +61,10 @@ class GoogleMapsCubit extends Cubit<GoogleMapsState> {
         (event) async {
           final index = state.establishments
               .indexWhere((element) => element.id == event.docs.first.id);
-          final productsCount =
+          final products =
               await _getProductsByEstablishment(event.docs.first.id);
           final establishment = event.docs.map(
-            (e) => e.data().copyWith(products: productsCount),
+            (e) => e.data().copyWith(products: products),
           );
 
           emit(
