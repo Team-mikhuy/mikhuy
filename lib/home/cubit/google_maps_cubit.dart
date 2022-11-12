@@ -49,6 +49,8 @@ class GoogleMapsCubit extends Cubit<GoogleMapsState> {
   Future<void> getEstablisments() async {
     emit(state.copyWith(requestStatus: RequestStatus.inProgress));
     try {
+      await _establishmentsSub?.cancel();
+
       _establishmentsRef.snapshots().listen(
         (event) async {
           final establishmentsTemp = event.docs.map((e) => e.data()).toList();
