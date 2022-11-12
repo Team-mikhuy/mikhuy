@@ -48,50 +48,32 @@ class GoogleMapsCubit extends Cubit<GoogleMapsState> {
   Future<void> getEstablisments() async {
     emit(state.copyWith(requestStatus: RequestStatus.inProgress));
     try {
-      final query = await _establishmentsRef.get();
-      final establishmentsTemp = query.docs.map((e) => e.data()).toList();
-      final establishments = <Establishment>[];
-
-      for (final establishment in establishmentsTemp) {
-        final products = await _getProductsByEstablishment(establishment.id);
-        establishments.add(establishment.copyWith(products: products));
-      }
-
       _establishmentsRef.snapshots().listen(
         (event) async {
-          final index = state.establishments
-              .indexWhere((element) => element.id == event.docs.first.id);
-          final products =
-              await _getProductsByEstablishment(event.docs.first.id);
-          final establishment = event.docs.map(
-            (e) => e.data().copyWith(products: products),
-          );
+          final establishmentsTemp = event.docs.map((e) => e.data()).toList();
+          final establishments = <Establishment>[];
+
+          for (final establishment in establishmentsTemp) {
+            final products = await _getProducts(establishment.id);
+            if (products.isEmpty) continue;
+
+            establishments.add(establishment.copyWith(products: products));
+          }
 
           emit(
             state.copyWith(
-              establishments: state.establishments
-                ..replaceRange(
-                  index,
-                  index + 1,
-                  establishment,
-                ),
+              establishments: establishments,
+              requestStatus: RequestStatus.completed,
             ),
           );
         },
-      );
-
-      emit(
-        state.copyWith(
-          establishments: establishments,
-          requestStatus: RequestStatus.completed,
-        ),
       );
     } catch (e) {
       emit(state.copyWith(requestStatus: RequestStatus.failed));
     }
   }
 
-  Future<List<Product>> _getProductsByEstablishment(
+  Future<List<Product>> _getProducts(
     String establishmentId,
   ) async {
     final snapshot = await _establishmentsRef
