@@ -49,12 +49,23 @@ class GoogleMapsCubit extends Cubit<GoogleMapsState> {
     emit(state.copyWith(requestStatus: RequestStatus.inProgress));
     try {
       final query = await _establishmentsRef.get();
-      final establishments = query.docs.map((e) => e.data()).toList();
+      final establishmentsTemp = query.docs.map((e) => e.data()).toList();
+      final establishments = <Establishment>[];
+
+      for (final establishment in establishmentsTemp) {
+        final products = await _getProductsByEstablishment(establishment.id);
+        establishments.add(establishment.copyWith(products: products));
+      }
 
       _establishmentsRef.snapshots().listen(
-        (event) {
+        (event) async {
           final index = state.establishments
               .indexWhere((element) => element.id == event.docs.first.id);
+          final productsCount =
+              await _getProductsByEstablishment(event.docs.first.id);
+          final establishment = event.docs.map(
+            (e) => e.data().copyWith(products: productsCount),
+          );
 
           emit(
             state.copyWith(
@@ -62,7 +73,7 @@ class GoogleMapsCubit extends Cubit<GoogleMapsState> {
                 ..replaceRange(
                   index,
                   index + 1,
-                  event.docs.map((e) => e.data()),
+                  establishment,
                 ),
             ),
           );
@@ -78,5 +89,21 @@ class GoogleMapsCubit extends Cubit<GoogleMapsState> {
     } catch (e) {
       emit(state.copyWith(requestStatus: RequestStatus.failed));
     }
+  }
+
+  Future<List<Product>> _getProductsByEstablishment(
+    String establishmentId,
+  ) async {
+    final snapshot = await _establishmentsRef
+        .doc(establishmentId)
+        .collection('product')
+        .withConverter<Product>(
+          fromFirestore: (snapshot, _) =>
+              Product.fromJson(snapshot.data()!, snapshot.id),
+          toFirestore: (product, _) => product.toJson(),
+        )
+        .get();
+
+    return snapshot.docs.map((e) => e.data()).toList();
   }
 }
