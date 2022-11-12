@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:mikhuy/establishment_detail/view/products_list.dart';
 import 'package:mikhuy/theme/app_colors.dart';
 import 'package:models/establishment.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -99,6 +100,7 @@ class EstablishmentDetailPage extends StatelessWidget {
               'Productos disponibles',
               style: Theme.of(context).textTheme.subtitle1,
             ),
+            ProductsList(_establishment),
           ],
         ),
       ),

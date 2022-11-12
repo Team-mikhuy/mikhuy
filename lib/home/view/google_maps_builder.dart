@@ -66,6 +66,7 @@ class _GoogleMapsView extends StatelessWidget {
         onMapCreated: _onMapCreated,
         initialCameraPosition: cameraPosition,
         myLocationEnabled: true,
+        padding: const EdgeInsets.only(top: 150),
       ),
     );
   }
