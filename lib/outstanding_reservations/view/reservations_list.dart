@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mikhuy/outstanding_reservations/cubit/outstanding_reservations_cubit.dart';
+import 'package:mikhuy/theme/theme.dart';
 import 'package:models/models.dart';
 
 class ReservationsList extends StatelessWidget {
@@ -40,12 +41,22 @@ class ReservationsList extends StatelessWidget {
                     reservation.establishmentName,
                     style: Theme.of(context).textTheme.headline2,
                   ),
+                  const SizedBox(height: 4),
                   Text(
                     '${reservation.productsCount} Productos por recoger',
                   ),
-                  Text(
-                    '''
+                  const SizedBox(height: 6),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.flushOrange.shade100,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      '''
 Hasta ${DateFormat('dd/MM/yyyy H:m').format(reservation.expirationDate)} hrs.''',
+                    ),
                   )
                 ],
               ),
