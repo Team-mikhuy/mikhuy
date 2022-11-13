@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mikhuy/home/cubit/establishment_list_cubit.dart';
+import 'package:mikhuy/outstanding_reservations/view/outstanding_reservations_page.dart';
 import 'package:mikhuy/theme/theme.dart';
 
 class EstablishmentsSearchBar extends StatelessWidget {
@@ -51,7 +52,12 @@ class EstablishmentsSearchBar extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute<bool>(
+                builder: (_) => const OutstandingReservationsPage(),
+              ),
+            ),
             icon: Icon(
               MdiIcons.shopping,
               color: AppColors.grey.shade800,
