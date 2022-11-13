@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mikhuy/establishment_detail/cubit/products_list_cubit.dart';
 import 'package:mikhuy/establishment_detail/view/products_list.dart';
+import 'package:mikhuy/establishment_detail/view/products_search_bar.dart';
 import 'package:mikhuy/theme/app_colors.dart';
 import 'package:models/establishment.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -46,6 +47,7 @@ class EstablishmentDetailPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -105,7 +107,13 @@ class EstablishmentDetailPage extends StatelessWidget {
             BlocProvider<ProductsListCubit>(
               create: (context) => ProductsListCubit()
                 ..getProductsByEstablishmentAlphabet(_establishment.id),
-              child: ProductsList(_establishment),
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ProductsSearchBar(_establishment.id),
+                    ProductsList(_establishment),
+                  ],
+                ),
             ),
           ],
         ),
