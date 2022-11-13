@@ -51,7 +51,7 @@ class EstablishmentListCubit extends Cubit<EstablishmentListState> {
     try {
       await _establishmentsSub?.cancel();
 
-      _establishmentsRef.snapshots().listen(
+      _establishmentsSub = _establishmentsRef.snapshots().listen(
         (event) async {
           final establishmentsTemp = event.docs.map((e) => e.data()).toList();
           final establishments = <Establishment>[];
