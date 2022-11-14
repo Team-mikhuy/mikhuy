@@ -11,6 +11,7 @@ dependencies:
   authentication:
       path: packages/authentication
   bloc: ^8.1.0
+  cloud_firestore: ^3.5.1
   equatable: ^2.0.5
   firebase_auth: ^3.10.0
   firebase_core: ^1.23.0
@@ -22,10 +23,15 @@ dependencies:
   flutter_svg: ^1.1.5
   formz: ^0.4.1
   google_fonts: ^3.0.1
+  google_maps_flutter: ^2.2.1
   intl: ^0.17.0
+  location: ^4.4.0
   material_design_icons_flutter: ^5.0.6996
   models:
     path: packages/models
+  permission_handler: ^10.2.0
+  url_launcher: ^6.1.6
+  sliding_up_panel: ^2.0.0+1
 
 dev_dependencies:
   bloc_test: ^9.1.0
