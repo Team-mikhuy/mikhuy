@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:models/models.dart';
 
 enum ReservationStatus {
   active,
@@ -14,11 +15,12 @@ class Reservation extends Equatable {
     required this.establishmentId,
     required this.establishmentName,
     required this.establishmentAddress,
-    required this.dateIssued,
-    required this.expirationDate,
+    this.dateIssued,
+    this.expirationDate,
     required this.total,
     required this.productsCount,
     required this.status,
+    this.details = const [],
   });
 
   factory Reservation.fromJson(Map<String, dynamic> json, [String? id]) {
@@ -45,11 +47,23 @@ class Reservation extends Equatable {
   final String establishmentId;
   final String establishmentName;
   final String establishmentAddress;
-  final DateTime dateIssued;
-  final DateTime expirationDate;
+  final DateTime? dateIssued;
+  final DateTime? expirationDate;
   final double total;
   final int productsCount;
   final ReservationStatus status;
+  final List<ReservationDetail> details;
+
+  static const empty = Reservation(
+    id: '',
+    userId: '',
+    establishmentId: '',
+    establishmentName: '',
+    establishmentAddress: '',
+    total: 0,
+    productsCount: 0,
+    status: ReservationStatus.active,
+  );
 
   @override
   List<Object?> get props => [
@@ -63,6 +77,7 @@ class Reservation extends Equatable {
         total,
         productsCount,
         status,
+        details,
       ];
 
   static ReservationStatus _mapStatusFromFirebase(String status) {
@@ -110,6 +125,7 @@ class Reservation extends Equatable {
     double? total,
     int? productsCount,
     ReservationStatus? status,
+    List<ReservationDetail>? details,
   }) {
     return Reservation(
       id: id ?? this.id,
@@ -122,6 +138,7 @@ class Reservation extends Equatable {
       total: total ?? this.total,
       productsCount: productsCount ?? this.productsCount,
       status: status ?? this.status,
+      details: details ?? this.details,
     );
   }
 }
