@@ -20,8 +20,8 @@ class _AddToCart extends State<AddToCart> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       height: 200,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +40,7 @@ class _AddToCart extends State<AddToCart> {
             height: 10,
           ),
           Text(
-            "Agregar al carrito",
+            'Agregar al carrito',
             style: Theme.of(context).textTheme.headline2,
           ),
           const SizedBox(
@@ -53,7 +53,7 @@ class _AddToCart extends State<AddToCart> {
                 widget._product.name,
                 style: Theme.of(context).textTheme.headline1,
               ),
-              Container(
+              DecoratedBox(
                 decoration: BoxDecoration(
                   color: AppColors.grey.shade100,
                   borderRadius: BorderRadius.circular(26),
@@ -76,7 +76,9 @@ class _AddToCart extends State<AddToCart> {
                       onPressed: () {
                         setState(() {
                           if (canIncreaseQuantity(
-                              _counter, widget._product.stock)) _counter++;
+                            _counter,
+                            widget._product.stock,
+                          )) _counter++;
                         });
                       },
                       icon: const Icon(
@@ -114,6 +116,11 @@ class _AddToCart extends State<AddToCart> {
                     context
                         .read<ProductsListCubit>()
                         .addToCart(widget._product, _counter);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Producto agregado al carrito'),
+                      ),
+                    );
                   },
                   style: AppTheme.secondaryButton,
                   child: const Text('AGREGAR AL CARRITO'),

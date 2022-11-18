@@ -153,7 +153,7 @@ class CartPage extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline2,
                         ),
                         Text(
-                          'Bs. ',
+                          'Bs. $total',
                           style: Theme.of(context).textTheme.subtitle1,
                         )
                       ],
