@@ -34,7 +34,7 @@ class OutstandingReservationsCubit extends Cubit<OutstandingReservationsState> {
         (event) async {
           final reservations = event.docs.map((e) => e.data()).toList()
             ..sort(
-              (a, b) => a.expirationDate.compareTo(b.expirationDate),
+              (a, b) => a.expirationDate!.compareTo(b.expirationDate!),
             );
 
           emit(
