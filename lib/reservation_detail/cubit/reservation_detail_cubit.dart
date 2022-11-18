@@ -62,4 +62,13 @@ class ReservationDetailCubit extends Cubit<ReservationDetailState> {
       emit(state.copyWith(requestStatus: RequestStatus.failed));
     }
   }
+
+  Future<void> cancelReservation() async {
+    emit(state.copyWith(requestStatus: RequestStatus.inProgress));
+    try {
+      await _reservationRef.update({'status': 'CAN'});
+    } catch (e) {
+      emit(state.copyWith(requestStatus: RequestStatus.failed));
+    }
+  }
 }
