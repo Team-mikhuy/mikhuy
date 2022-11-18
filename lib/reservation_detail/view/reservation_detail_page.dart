@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mikhuy/outstanding_reservations/outstanding_reservations.dart';
 import 'package:mikhuy/reservation_detail/reservation_detail.dart';
 import 'package:mikhuy/shared/enums/request_status.dart';
 import 'package:mikhuy/theme/theme.dart';
@@ -10,19 +9,77 @@ import 'package:models/models.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class ReservationDetailPage extends StatelessWidget {
-  const ReservationDetailPage(this._reservation, {super.key});
-  final Reservation _reservation;
+  ReservationDetailPage(Reservation reservation, {super.key})
+      : _cubit = ReservationDetailCubit(reservation)
+          ..listenReservation()
+          ..getReservationDetails();
+
+  final ReservationDetailCubit _cubit;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalle de reserva'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog<bool>(
+                barrierDismissible: false,
+                context: context,
+                builder: (_) {
+                  return Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.white,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '¿Estas seguro de\ncancelar tu reserva?',
+                            style: Theme.of(context).textTheme.headline2,
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Esta accion no se\npuede deshacer 👀',
+                            style: Theme.of(context).textTheme.subtitle1,
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('Volver'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  await _cubit.cancelReservation();
+                                },
+                                child: const Text('Cancelar reserva'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            icon: const Icon(MdiIcons.deleteOutline),
+            color: AppColors.grey.shade700,
+          )
+        ],
       ),
-      body: BlocProvider<ReservationDetailCubit>(
-        create: (context) => ReservationDetailCubit(_reservation)
-          ..listenReservation()
-          ..getReservationDetails(),
+      body: BlocProvider<ReservationDetailCubit>.value(
+        value: _cubit,
         child: const _ReservationDetailView(),
       ),
     );
@@ -46,28 +103,37 @@ class _ReservationDetailView extends StatelessWidget {
           showDialog<bool>(
             barrierDismissible: false,
             context: context,
-            builder: (context) {
-              return Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  children: [
-                    const Text('Tu reserva expiro o fue cancelada 👀'),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => Navigator.pushAndRemoveUntil<void>(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              const OutstandingReservationsPage(),
-                        ),
-                        ModalRoute.withName('/'),
+            builder: (_) {
+              return Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 32,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: AppColors.white,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Tu reserva expiro o fue\ncancelada 👀',
+                        style: Theme.of(context).textTheme.subtitle1,
+                        textAlign: TextAlign.center,
                       ),
-                      child: const Text('Aceptar'),
-                    ),
-                  ],
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          var count = 0;
+                          Navigator.popUntil(context, (route) {
+                            return count++ == 2;
+                          });
+                        },
+                        child: const Text('Aceptar'),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
