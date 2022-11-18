@@ -1,6 +1,3 @@
-import 'dart:ffi';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -18,11 +15,11 @@ class ProductsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProductsListCubit, ProductsListState>(
       builder: (context, state) {
-        if (state.requestStatus == RequestStatus.completed) {
+        if (state.productsRequestStatus == RequestStatus.completed) {
           return _ProductsListView(state.products, establishment.id);
         }
 
-        if (state.requestStatus == RequestStatus.failed) {
+        if (state.productsRequestStatus == RequestStatus.failed) {
           return Center(
             child: Column(
               children: [
@@ -64,9 +61,8 @@ class _ProductsListView extends StatelessWidget {
               ),
               shrinkWrap: true,
               itemCount: products.length,
-              itemBuilder: (context, index) => _ProductsListItem(
-                products[index],
-              ),
+              itemBuilder: (context, index) =>
+                  _ProductsListItem(products[index]),
             )
           : Column(
               mainAxisSize: MainAxisSize.min,
@@ -114,6 +110,7 @@ class _ProductsListItem extends StatelessWidget {
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       product.name,
@@ -145,8 +142,11 @@ class _ProductsListItem extends StatelessWidget {
                       onPressed: () {
                         showModalBottomSheet<void>(
                           context: context,
-                          builder: (BuildContext context) {
-                            return AddToCart(product);
+                          builder: (BuildContext _) {
+                            return BlocProvider.value(
+                              value: context.read<ProductsListCubit>(),
+                              child: AddToCart(product),
+                            );
                           },
                         );
                       },

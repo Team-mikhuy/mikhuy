@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mikhuy/establishment_detail/view/establishment_detail_page.dart';
 import 'package:mikhuy/home/cubit/establishment_list_cubit.dart';
 import 'package:mikhuy/shared/enums/request_status.dart';
 import 'package:mikhuy/theme/theme.dart';
@@ -93,39 +94,47 @@ class EstablishmentListItem extends StatelessWidget {
 
     final isOpen = now.isAfter(openingTime) && now.isBefore(closingTime);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
+    return InkWell(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute<bool>(
+          builder: (context) => EstablishmentDetailPage(_establishment),
+        ),
       ),
-      width: double.infinity,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _establishment.name,
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            _establishment.address,
-            style: Theme.of(context).textTheme.caption,
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                isOpen ? 'Abierto ahora' : 'Cerrado',
-                style: Theme.of(context).textTheme.overline!.copyWith(
-                      color: isOpen ? AppColors.success : AppColors.danger,
-                    ),
-              ),
-              Text('${_getProductsCount()} productos disponibles'),
-            ],
-          ),
-        ],
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 8,
+        ),
+        width: double.infinity,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _establishment.name,
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              _establishment.address,
+              style: Theme.of(context).textTheme.caption,
+            ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  isOpen ? 'Abierto ahora' : 'Cerrado',
+                  style: Theme.of(context).textTheme.overline!.copyWith(
+                        color: isOpen ? AppColors.success : AppColors.danger,
+                      ),
+                ),
+                Text('${_getProductsCount()} productos disponibles'),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

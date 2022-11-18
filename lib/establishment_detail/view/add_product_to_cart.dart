@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:mikhuy/establishment_detail/cubit/products_list_cubit.dart';
 import 'package:mikhuy/theme/app_colors.dart';
 import 'package:mikhuy/theme/app_theme.dart';
 import 'package:models/models.dart';
@@ -18,7 +19,6 @@ class _AddToCart extends State<AddToCart> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -61,26 +61,29 @@ class _AddToCart extends State<AddToCart> {
                 child: Row(
                   children: [
                     IconButton(
-                        onPressed: () {
-                          setState(() {
-                            if (isCounterValid(_counter)) _counter--;
-                          });
-                        },
-                        icon: Icon(
-                          MdiIcons.minus,
-                          color: AppColors.acadia,
-                        )),
-                    Text('${_counter}'),
+                      onPressed: () {
+                        setState(() {
+                          if (canDecreaseQuantity(_counter)) _counter--;
+                        });
+                      },
+                      icon: const Icon(
+                        MdiIcons.minus,
+                        color: AppColors.acadia,
+                      ),
+                    ),
+                    Text('$_counter'),
                     IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _counter++;
-                          });
-                        },
-                        icon: Icon(
-                          MdiIcons.plus,
-                          color: AppColors.acadia,
-                        )),
+                      onPressed: () {
+                        setState(() {
+                          if (canIncreaseQuantity(
+                              _counter, widget._product.stock)) _counter++;
+                        });
+                      },
+                      icon: const Icon(
+                        MdiIcons.plus,
+                        color: AppColors.acadia,
+                      ),
+                    ),
                   ],
                 ),
               )
@@ -108,7 +111,9 @@ class _AddToCart extends State<AddToCart> {
                 child: ElevatedButton(
                   key: const Key('AddProduct_ToCar_flatButton'),
                   onPressed: () {
-                    
+                    context
+                        .read<ProductsListCubit>()
+                        .addToCart(widget._product, _counter);
                   },
                   style: AppTheme.secondaryButton,
                   child: const Text('AGREGAR AL CARRITO'),
@@ -121,8 +126,12 @@ class _AddToCart extends State<AddToCart> {
     );
   }
 
-  bool isCounterValid(int counter) {
+  bool canDecreaseQuantity(int counter) {
     if (counter != 1 || counter > 1) return true;
     return false;
+  }
+
+  bool canIncreaseQuantity(int counter, int stock) {
+    return counter < stock;
   }
 }
