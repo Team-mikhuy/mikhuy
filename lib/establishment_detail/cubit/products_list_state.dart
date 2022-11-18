@@ -1,7 +1,7 @@
 part of 'products_list_cubit.dart';
 
 class ProductsListState extends Equatable {
-  ProductsListState({
+  const ProductsListState({
     this.products = const [],
     this.requestStatus = RequestStatus.initial,
   });
@@ -10,7 +10,6 @@ class ProductsListState extends Equatable {
   final RequestStatus requestStatus;
 
   @override
-  // TODO: implement props
   List<Object> get props => [products, requestStatus];
 
   ProductsListState copyWith({

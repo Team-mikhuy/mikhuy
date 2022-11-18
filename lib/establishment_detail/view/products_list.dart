@@ -1,8 +1,11 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mikhuy/establishment_detail/cubit/products_list_cubit.dart';
+import 'package:mikhuy/establishment_detail/view/add_product_to_cart.dart';
 import 'package:mikhuy/shared/enums/request_status.dart';
 import 'package:mikhuy/theme/app_colors.dart';
 import 'package:models/models.dart';
@@ -66,12 +69,12 @@ class _ProductsListView extends StatelessWidget {
               ),
             )
           : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Text('No se encontraron resultados'),
-              Text('🤦‍♂️'), 
-            ],
-          ),
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Text('No se encontraron resultados'),
+                Text('🤦‍♂️'),
+              ],
+            ),
     );
   }
 }
@@ -139,7 +142,14 @@ class _ProductsListItem extends StatelessWidget {
                           ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showModalBottomSheet<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AddToCart(product);
+                          },
+                        );
+                      },
                       icon: Icon(
                         MdiIcons.plus,
                         color: AppColors.grey.shade50,
