@@ -31,6 +31,7 @@ dependencies:
     path: packages/models
   permission_handler: ^10.2.0
   qr_flutter: ^4.0.0
+  url_launcher: ^6.1.6
   sliding_up_panel: ^2.0.0+1
 
 dev_dependencies:
