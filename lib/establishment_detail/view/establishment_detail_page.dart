@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mikhuy/establishment_detail/cubit/products_list_cubit.dart';
+import 'package:mikhuy/establishment_detail/view/cart_page.dart';
 import 'package:mikhuy/establishment_detail/view/products_list.dart';
 import 'package:mikhuy/establishment_detail/view/products_search_bar.dart';
 import 'package:mikhuy/theme/app_colors.dart';
@@ -34,6 +35,9 @@ class EstablishmentDetailPage extends StatelessWidget {
 
     final isOpen = now.isAfter(openingTime) && now.isBefore(closingTime);
 
+    final productsListCubit = ProductsListCubit()
+      ..getProductsByEstablishmentAlphabet(_establishment.id);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(_establishment.name),
@@ -41,81 +45,98 @@ class EstablishmentDetailPage extends StatelessWidget {
           onPressed: () => {
             Navigator.of(context).pop(),
           },
-          icon: Icon(MdiIcons.arrowLeft),
+          icon: const Icon(MdiIcons.arrowLeft),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: _launchURL,
-                  child: Row(
-                    children: [
-                      Icon(MdiIcons.mapMarkerOutline),
-                      Text(
-                        _establishment.address,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              decoration: TextDecoration.underline,
-                            ),
-                      ),
-                    ],
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(MdiIcons.cart),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute<bool>(
+              builder: (context) {
+                return BlocProvider.value(
+                  value: productsListCubit,
+                  child: CartPage(_establishment),
+                );
+              },
+            ),
+          );
+        },
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: _launchURL,
+                    child: Row(
+                      children: [
+                        const Icon(MdiIcons.mapMarkerOutline),
+                        Text(
+                          _establishment.address,
+                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                decoration: TextDecoration.underline,
+                              ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Text(
-                  _establishment.referenceNumber,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.right,
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              'Horarios de Atención',
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            const SizedBox(
-              height: 4,
-            ),
-            Text(
-              'Todos los días de ${_establishment.openingTime.hour}:${_establishment.openingTime.minute} a ${_establishment.closingTime.hour}:${_establishment.closingTime.minute}',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(
-              height: 4,
-            ),
-            Text(
-              isOpen ? 'Abierto ahora' : 'Cerrado',
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: isOpen ? AppColors.success : AppColors.danger,
+                  Text(
+                    _establishment.referenceNumber,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.right,
                   ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Productos disponibles',
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            BlocProvider<ProductsListCubit>(
-              create: (context) => ProductsListCubit()
-                ..getProductsByEstablishmentAlphabet(_establishment.id),
-              child: Column(
+                ],
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Text(
+                'Horarios de Atención',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Text(
+                'Todos los días de ${_establishment.openingTime.hour}:${_establishment.openingTime.minute} a ${_establishment.closingTime.hour}:${_establishment.closingTime.minute}',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Text(
+                isOpen ? 'Abierto ahora' : 'Cerrado',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: isOpen ? AppColors.success : AppColors.danger,
+                    ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Productos disponibles',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              BlocProvider<ProductsListCubit>.value(
+                value: productsListCubit,
+                child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ProductsSearchBar(_establishment.id),
                     ProductsList(_establishment),
                   ],
                 ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );

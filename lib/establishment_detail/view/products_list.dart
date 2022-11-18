@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mikhuy/establishment_detail/cubit/products_list_cubit.dart';
+import 'package:mikhuy/establishment_detail/view/add_product_to_cart.dart';
 import 'package:mikhuy/shared/enums/request_status.dart';
 import 'package:mikhuy/theme/app_colors.dart';
 import 'package:models/models.dart';
@@ -15,11 +15,11 @@ class ProductsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProductsListCubit, ProductsListState>(
       builder: (context, state) {
-        if (state.requestStatus == RequestStatus.completed) {
+        if (state.productsRequestStatus == RequestStatus.completed) {
           return _ProductsListView(state.products, establishment.id);
         }
 
-        if (state.requestStatus == RequestStatus.failed) {
+        if (state.productsRequestStatus == RequestStatus.failed) {
           return Center(
             child: Column(
               children: [
@@ -61,17 +61,16 @@ class _ProductsListView extends StatelessWidget {
               ),
               shrinkWrap: true,
               itemCount: products.length,
-              itemBuilder: (context, index) => _ProductsListItem(
-                products[index],
-              ),
+              itemBuilder: (context, index) =>
+                  _ProductsListItem(products[index]),
             )
           : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Text('No se encontraron resultados'),
-              Text('🤦‍♂️'), 
-            ],
-          ),
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Text('No se encontraron resultados'),
+                Text('🤦‍♂️'),
+              ],
+            ),
     );
   }
 }
@@ -111,6 +110,7 @@ class _ProductsListItem extends StatelessWidget {
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       product.name,
@@ -139,7 +139,17 @@ class _ProductsListItem extends StatelessWidget {
                           ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showModalBottomSheet<void>(
+                          context: context,
+                          builder: (BuildContext _) {
+                            return BlocProvider.value(
+                              value: context.read<ProductsListCubit>(),
+                              child: AddToCart(product),
+                            );
+                          },
+                        );
+                      },
                       icon: Icon(
                         MdiIcons.plus,
                         color: AppColors.grey.shade50,

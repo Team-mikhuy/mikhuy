@@ -1,25 +1,35 @@
 part of 'products_list_cubit.dart';
 
 class ProductsListState extends Equatable {
-  ProductsListState({
+  const ProductsListState({
     this.products = const [],
-    this.requestStatus = RequestStatus.initial,
+    this.cart = const [],
+    this.productsRequestStatus = RequestStatus.initial,
+    this.reservationRequestStatus = RequestStatus.initial,
   });
 
   final List<Product> products;
-  final RequestStatus requestStatus;
+  final List<ReservationDetail> cart;
+  final RequestStatus productsRequestStatus;
+  final RequestStatus reservationRequestStatus;
 
   @override
-  // TODO: implement props
-  List<Object> get props => [products, requestStatus];
+  List<Object> get props =>
+      [products, cart, productsRequestStatus, reservationRequestStatus];
 
   ProductsListState copyWith({
     List<Product>? products,
-    RequestStatus? requestStatus,
+    List<ReservationDetail>? cart,
+    RequestStatus? productsRequestStatus,
+    RequestStatus? reservationRequestStatus,
   }) {
     return ProductsListState(
       products: products ?? this.products,
-      requestStatus: requestStatus ?? this.requestStatus,
+      cart: cart ?? this.cart,
+      productsRequestStatus:
+          productsRequestStatus ?? this.productsRequestStatus,
+      reservationRequestStatus:
+          reservationRequestStatus ?? this.reservationRequestStatus,
     );
   }
 }
