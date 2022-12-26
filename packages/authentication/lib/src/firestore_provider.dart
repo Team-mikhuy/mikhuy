@@ -22,13 +22,13 @@ class FirestoreProvider {
   }
 
   Future<bool> verifyIfUsernameExists(String username) async {
-    final coincidences = await _users
-        .where(
-          'username',
-          isEqualTo: username,
-        )
-        .get();
-    return coincidences.size > 0;
+    return _users.get().asStream().any(
+          (element) => element.docs.any(
+            (user) =>
+                user['username'].toString().toLowerCase() ==
+                username.toLowerCase(),
+          ),
+        );
   }
 
   Future<User> getUser(String id) async {
