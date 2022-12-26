@@ -76,7 +76,41 @@ class EstablishmentsSearchBar extends StatelessWidget {
               PopupMenuItem(
                 value: 1,
                 child: const Text('Cerrar sesión'),
-                onTap: () => context.read<AppBloc>().add(AppLogoutRequested()),
+                onTap: () async {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                        title: const Icon(MdiIcons.exclamation),
+                        content: const Text('¿Está seguro/a de cerrar sesión?'),
+                        actionsPadding: const EdgeInsets.only(
+                          bottom: 16,
+                          left: 16,
+                          right: 16,
+                        ),
+                        contentPadding: const EdgeInsets.all(16),
+                        actions: <Widget>[
+                          ElevatedButton(
+                            onPressed: () {
+                              context.read<AppBloc>().add(AppLogoutRequested());
+                            },
+                            style: AppTheme.secondaryButton,
+                            child: const Text('Confirmar'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Volver atrás'),
+                          ),
+                        ],
+                      ),
+                    );
+                  });
+                },
               ),
             ],
           ),
