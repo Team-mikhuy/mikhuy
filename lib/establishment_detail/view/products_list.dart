@@ -27,7 +27,7 @@ class ProductsList extends StatelessWidget {
                 TextButton(
                   onPressed: () => context
                       .read<ProductsListCubit>()
-                      .getProductsByEstablishmentAlphabet(establishment.id),
+                      .getProductsByEstablishment(establishment.id),
                   child: const Text('Reintentar'),
                 )
               ],
@@ -51,7 +51,7 @@ class _ProductsListView extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () => context
           .read<ProductsListCubit>()
-          .getProductsByEstablishmentAlphabet(establishmentID),
+          .getProductsByEstablishment(establishmentID),
       child: products.isNotEmpty
           ? GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

@@ -36,7 +36,7 @@ class EstablishmentDetailPage extends StatelessWidget {
     final isOpen = now.isAfter(openingTime) && now.isBefore(closingTime);
 
     final productsListCubit = ProductsListCubit()
-      ..getProductsByEstablishmentAlphabet(_establishment.id);
+      ..getProductsByEstablishment(_establishment.id);
 
     return Scaffold(
       appBar: AppBar(
@@ -81,9 +81,10 @@ class EstablishmentDetailPage extends StatelessWidget {
                         const Icon(MdiIcons.mapMarkerOutline),
                         Text(
                           _establishment.address,
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                decoration: TextDecoration.underline,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    decoration: TextDecoration.underline,
+                                  ),
                         ),
                       ],
                     ),
