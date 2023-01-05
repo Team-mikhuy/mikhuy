@@ -94,7 +94,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     );
   }
 
-  void birthdateChanged(DateTime value) {
+  void birthdateChanged(DateTime? value) {
     final birthdate = BirthDate.dirty(value);
     emit(
       state.copyWith(
