@@ -69,13 +69,17 @@ class _EstablishmentDetailView extends StatelessWidget {
           title: Text(establishment.name),
           leading: IconButton(
             onPressed: () async {
-              final goBack = await showDialog<bool>(
-                context: context,
-                builder: _getGoBackAlert,
-              );
+              if (context.read<ProductsListCubit>().state.cart.isNotEmpty) {
+                final goBack = await showDialog<bool>(
+                  context: context,
+                  builder: _getGoBackAlert,
+                );
 
-              // ignore: use_build_context_synchronously
-              if (goBack!) Navigator.of(context).pop();
+                // ignore: use_build_context_synchronously
+                if (goBack!) Navigator.of(context).pop();
+              } else {
+                Navigator.of(context).pop();
+              }
             },
             icon: const Icon(MdiIcons.arrowLeft),
           ),
