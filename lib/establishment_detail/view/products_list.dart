@@ -135,8 +135,8 @@ class _ProductsListItem extends StatelessWidget {
                           ),
                     ),
                     IconButton(
-                      onPressed: () {
-                        showModalBottomSheet<void>(
+                      onPressed: () async {
+                        final productAdded = await showModalBottomSheet<bool>(
                           context: context,
                           builder: (BuildContext _) {
                             return BlocProvider.value(
@@ -145,6 +145,14 @@ class _ProductsListItem extends StatelessWidget {
                             );
                           },
                         );
+                        if (productAdded!) {
+                          // ignore: use_build_context_synchronously
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Producto agregado al carrito.'),
+                            ),
+                          );
+                        }
                       },
                       icon: Icon(
                         MdiIcons.plus,
