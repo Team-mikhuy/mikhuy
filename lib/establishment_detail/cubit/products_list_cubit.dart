@@ -7,7 +7,8 @@ import 'package:models/models.dart';
 part 'products_list_state.dart';
 
 class ProductsListCubit extends Cubit<ProductsListState> {
-  ProductsListCubit() : super(const ProductsListState());
+  ProductsListCubit(Establishment establishment)
+      : super(ProductsListState(establishment: establishment));
 
   final _establishmentsRef = FirebaseFirestore.instance
       .collection('establishment')
@@ -31,13 +32,11 @@ class ProductsListCubit extends Cubit<ProductsListState> {
 
   /// Emits a new state with products from the selected establishment.
   /// The list of products will be alphabetically sorted.
-  Future<void> getProductsByEstablishment(
-    String establishmentID,
-  ) async {
+  Future<void> getProducts() async {
     try {
       emit(state.copyWith(productsRequestStatus: RequestStatus.inProgress));
       final snapshot = await _establishmentsRef
-          .doc(establishmentID)
+          .doc(state.establishment.id)
           .collection('product')
           .withConverter<Product>(
             fromFirestore: (snapshot, _) =>
