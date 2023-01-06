@@ -128,7 +128,7 @@ class CartPage extends StatelessWidget {
                             onPressed: () {
                               context
                                   .read<ProductsListCubit>()
-                                  .removeItemFromCart(detail);
+                                  .deleteItemReservationFromCartList(detail);
                             },
                           ),
                         )
@@ -166,7 +166,8 @@ class CartPage extends StatelessWidget {
                       onPressed: () {
                         context
                             .read<ProductsListCubit>()
-                            .confirmReservation(_establishment, userId);
+                            .insertReservationByCartList(
+                                _establishment, userId);
                       },
                       style: AppTheme.secondaryButton,
                       child: Row(

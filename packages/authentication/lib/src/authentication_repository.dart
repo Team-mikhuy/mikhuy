@@ -1,10 +1,9 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'dart:async';
 
 import 'package:authentication/authentication.dart';
 import 'package:authentication/src/firestore_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+// ignore: depend_on_referenced_packages
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:meta/meta.dart';
@@ -19,9 +18,7 @@ class AuthenticationRepository {
     firebase_auth.FirebaseAuth? firebaseAuth,
     FirestoreProvider? firestoreProvider,
   })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-        _firestoreProvider = firestoreProvider ?? FirestoreProvider() {
-    _firebaseAuth.setLanguageCode('es');
-  }
+        _firestoreProvider = firestoreProvider ?? FirestoreProvider();
 
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final FirestoreProvider _firestoreProvider;
@@ -135,10 +132,6 @@ class AuthenticationRepository {
     } catch (_) {
       throw LogOutFailure();
     }
-  }
-
-  Future<void> restorePassword(String email) async {
-    await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 }
 

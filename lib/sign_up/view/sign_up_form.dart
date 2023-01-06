@@ -165,14 +165,14 @@ class _BirthDateInput extends StatelessWidget {
           onTap: () async {
             final birthdate = await showDatePicker(
               context: context,
-              initialDate: state.birthdate.value ?? DateTime.now(),
-              firstDate: DateTime(DateTime.now().year - 100),
-              lastDate: DateTime.now(),
+              initialDate: DateTime.now(),
+              firstDate: DateTime(1950),
+              lastDate: DateTime(DateTime.now().year + 1),
             );
 
-            // ignore: use_build_context_synchronously
-            context.read<SignUpCubit>().birthdateChanged(birthdate);
             if (birthdate != null) {
+              // ignore: use_build_context_synchronously
+              context.read<SignUpCubit>().birthdateChanged(birthdate);
               controller.text =
                   '${birthdate.day}/${birthdate.month}/${birthdate.year}';
             }
@@ -181,9 +181,7 @@ class _BirthDateInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'Fecha de nacimiento',
             hintText: 'DD/MM/AAAA',
-            errorText: state.birthdate.invalid
-                ? state.birthdate.error?.errorMessage
-                : null,
+            errorText: state.birthdate.invalid ? 'Fecha inválida' : null,
           ),
         );
       },

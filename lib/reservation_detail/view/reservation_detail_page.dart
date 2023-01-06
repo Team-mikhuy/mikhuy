@@ -118,7 +118,7 @@ class _ReservationDetailView extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Tu reserva expiró o fue\ncancelada 👀',
+                        'Tu reserva expiro o fue\ncancelada 👀',
                         style: Theme.of(context).textTheme.subtitle1,
                         textAlign: TextAlign.center,
                       ),
@@ -129,42 +129,6 @@ class _ReservationDetailView extends StatelessWidget {
                           Navigator.popUntil(context, (route) {
                             return count++ == 2;
                           });
-                        },
-                        child: const Text('Aceptar'),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        } else if (state.reservation.status == ReservationStatus.delivered) {
-          showDialog<bool>(
-            barrierDismissible: false,
-            context: context,
-            builder: (_) {
-              return Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 32,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: AppColors.white,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Tu reserva fué entregada! 🎉',
-                        style: Theme.of(context).textTheme.subtitle1,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
                         },
                         child: const Text('Aceptar'),
                       ),

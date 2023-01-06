@@ -7,8 +7,7 @@ import 'package:models/models.dart';
 part 'products_list_state.dart';
 
 class ProductsListCubit extends Cubit<ProductsListState> {
-  ProductsListCubit(Establishment establishment)
-      : super(ProductsListState(establishment: establishment));
+  ProductsListCubit() : super(const ProductsListState());
 
   final _establishmentsRef = FirebaseFirestore.instance
       .collection('establishment')
@@ -30,13 +29,13 @@ class ProductsListCubit extends Cubit<ProductsListState> {
         toFirestore: (reservation, _) => reservation.toJson(),
       );
 
-  /// Emits a new state with products from the selected establishment.
-  /// The list of products will be alphabetically sorted.
-  Future<void> getProducts() async {
+  Future<void> getProductsByEstablishmentAlphabet(
+    String establishmentID,
+  ) async {
     try {
       emit(state.copyWith(productsRequestStatus: RequestStatus.inProgress));
       final snapshot = await _establishmentsRef
-          .doc(state.establishment.id)
+          .doc(establishmentID)
           .collection('product')
           .withConverter<Product>(
             fromFirestore: (snapshot, _) =>
@@ -61,10 +60,7 @@ class ProductsListCubit extends Cubit<ProductsListState> {
     }
   }
 
-  Future<void> searchProductsByCriteria(
-    String establishmentID,
-    String criteria,
-  ) async {
+  Future<void> searchByProducts(String establishmentID, String criteria) async {
     if (criteria.isEmpty) return;
 
     try {
@@ -82,11 +78,9 @@ class ProductsListCubit extends Cubit<ProductsListState> {
 
       final productsListTemp = snapshot.docs
           .map((e) => e.data())
-          .where(
-            (element) =>
-                element.stock > 0 &&
-                element.name.toLowerCase().contains(criteria.toLowerCase()),
-          )
+          .where((element) =>
+              element.stock > 0 &&
+              element.name.toLowerCase().contains(criteria.toLowerCase()))
           .toList()
         ..sort((a, b) => a.name.compareTo(b.name));
 
@@ -140,17 +134,16 @@ class ProductsListCubit extends Cubit<ProductsListState> {
     }
   }
 
-  void removeItemFromCart(ReservationDetail reservationDetail) {
-    final cartTemp = [...state.cart]
-      ..removeWhere((element) => element == reservationDetail);
-
-    emit(state.copyWith(cart: cartTemp));
+  void deleteItemReservationFromCartList(ReservationDetail reservationDetail) {
+    final cartTemp = [...state.cart];
+    cartTemp.removeWhere((element) => element == reservationDetail);
+    emit(
+      state.copyWith(cart: cartTemp),
+    );
   }
 
-  Future<void> confirmReservation(
-    Establishment establishment,
-    String userId,
-  ) async {
+  Future<void> insertReservationByCartList(
+      Establishment establishment, String userId) async {
     emit(state.copyWith(reservationRequestStatus: RequestStatus.inProgress));
     try {
       var total = 0.0;
@@ -184,22 +177,6 @@ class ProductsListCubit extends Cubit<ProductsListState> {
               toFirestore: (reservationDetail, _) => reservationDetail.toJson(),
             )
             .add(detail);
-
-        final productRef = _establishmentsRef
-            .doc(establishment.id)
-            .collection('product')
-            .doc(detail.productId)
-            .withConverter<Product>(
-              fromFirestore: (snapshots, _) => Product.fromJson(
-                snapshots.data()!,
-                snapshots.id,
-              ),
-              toFirestore: (product, _) => product.toJson(),
-            );
-
-        final productSnap = await productRef.get();
-        final product = productSnap.data()!;
-        await productRef.update({'stock': product.stock - detail.quantity});
       }
       emit(state.copyWith(reservationRequestStatus: RequestStatus.completed));
     } catch (e) {
