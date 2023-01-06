@@ -41,21 +41,19 @@ class ProductsSearchBar extends StatelessWidget {
               ),
               onChanged: (value) {
                 if (value.isEmpty) {
-                  context
-                      .read<ProductsListCubit>()
-                      .getProductsByEstablishmentAlphabet(establishmentID);
+                  context.read<ProductsListCubit>().getProducts();
                 }
               },
               onSubmitted: (value) => context
                   .read<ProductsListCubit>()
-                  .searchByProducts(establishmentID, value),
+                  .searchProductsByCriteria(establishmentID, value),
             ),
           ),
           Icon(
-              MdiIcons.magnify,
-              color: AppColors.grey.shade800,
-              size: 24,
-            ),
+            MdiIcons.magnify,
+            color: AppColors.grey.shade800,
+            size: 24,
+          ),
         ],
       ),
     );

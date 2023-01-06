@@ -30,7 +30,57 @@ class SignInForm extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                final signInCubit = context.read<SignInCubit>();
+                final message = await showDialog<String>(
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
+                      title: const Text('Recuperar contraseña'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Ingresa tu correo electrónico:         '),
+                          const SizedBox(height: 8),
+                          BlocProvider.value(
+                            value: signInCubit,
+                            child: _EmailInput(),
+                          ),
+                        ],
+                      ),
+                      actionsPadding: const EdgeInsets.only(
+                        bottom: 24,
+                        left: 24,
+                        right: 24,
+                      ),
+                      contentPadding: const EdgeInsets.all(24),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: AppTheme.secondaryButton,
+                          child: const Text('Cancelar'),
+                        ),
+                        BlocProvider.value(
+                          value: signInCubit,
+                          child: const _RestorePasswordButton(),
+                        ),
+                      ],
+                    );
+                  },
+                );
+                if (message != null) {
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(message)),
+                  );
+                }
+              },
               style: const ButtonStyle(
                 padding: MaterialStatePropertyAll(EdgeInsets.zero),
               ),
@@ -41,6 +91,42 @@ class SignInForm extends StatelessWidget {
           _LoginButton(),
         ],
       ),
+    );
+  }
+}
+
+class _RestorePasswordButton extends StatelessWidget {
+  const _RestorePasswordButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<SignInCubit, SignInState>(
+      buildWhen: (previous, current) =>
+          previous.email != current.email ||
+          previous.restorePasswordRequestStatus !=
+              current.restorePasswordRequestStatus,
+      builder: (context, state) {
+        return ElevatedButton(
+          onPressed: state.email.invalid ||
+                  state.restorePasswordRequestStatus == RequestStatus.inProgress
+              ? null
+              : () {
+                  context.read<SignInCubit>().restorePassword();
+                },
+          child: const Text('Enviar'),
+        );
+      },
+      listener: (context, state) {
+        if (state.restorePasswordRequestStatus == RequestStatus.completed) {
+          Navigator.of(context).pop(
+            'Se envió un mensaje a su correo para restablecer la contraseña.',
+          );
+        } else if (state.restorePasswordRequestStatus == RequestStatus.failed) {
+          Navigator.of(context).pop(
+            'Ocurrió un error inesperado, inténtelo de nuevo.',
+          );
+        }
+      },
     );
   }
 }

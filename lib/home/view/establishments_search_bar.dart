@@ -96,6 +96,7 @@ class EstablishmentsSearchBar extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () {
                               context.read<AppBloc>().add(AppLogoutRequested());
+                              Navigator.of(context).pop();
                             },
                             style: AppTheme.secondaryButton,
                             child: const Text('Confirmar'),
