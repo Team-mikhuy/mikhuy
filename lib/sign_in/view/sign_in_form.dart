@@ -37,26 +37,27 @@ class SignInForm extends StatelessWidget {
                   builder: (_) {
                     return AlertDialog(
                       shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
                       ),
                       title: const Text('Recuperar contraseña'),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          const Text('Ingresa tu correo electrónico:         '),
+                          const SizedBox(height: 8),
                           BlocProvider.value(
                             value: signInCubit,
                             child: _EmailInput(),
                           ),
-                          const Text('Ingresa tu correo electrónico:'),
                         ],
                       ),
                       actionsPadding: const EdgeInsets.only(
-                        bottom: 16,
-                        left: 16,
-                        right: 16,
+                        bottom: 24,
+                        left: 24,
+                        right: 24,
                       ),
-                      contentPadding: const EdgeInsets.all(16),
+                      contentPadding: const EdgeInsets.all(24),
                       actions: <Widget>[
                         ElevatedButton(
                           onPressed: () {
