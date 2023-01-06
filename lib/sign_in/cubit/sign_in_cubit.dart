@@ -2,6 +2,7 @@ import 'package:authentication/authentication.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:mikhuy/shared/enums/request_status.dart';
 import 'package:mikhuy/shared/shared.dart';
 import 'package:mikhuy/sign_in/input_models/input_models.dart';
 
@@ -51,6 +52,28 @@ class SignInCubit extends Cubit<SignInState> {
       );
     } catch (_) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
+    }
+  }
+
+  Future<void> restorePassword() async {
+    emit(
+      state.copyWith(restorePasswordRequestStatus: RequestStatus.inProgress),
+    );
+
+    try {
+      await _authenticationRepository.restorePassword(state.email.value);
+
+      emit(
+        state.copyWith(
+          restorePasswordRequestStatus: RequestStatus.completed,
+          email: const Email.pure(),
+        ),
+      );
+      emit(
+        state.copyWith(restorePasswordRequestStatus: RequestStatus.initial),
+      );
+    } catch (_) {
+      emit(state.copyWith(restorePasswordRequestStatus: RequestStatus.failed));
     }
   }
 }
