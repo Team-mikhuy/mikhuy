@@ -16,7 +16,7 @@ class ProductsList extends StatelessWidget {
     return BlocBuilder<ProductsListCubit, ProductsListState>(
       builder: (context, state) {
         if (state.productsRequestStatus == RequestStatus.completed) {
-          return _ProductsListView(state.products, establishment.id);
+          return _ProductsListView(state.products);
         }
 
         if (state.productsRequestStatus == RequestStatus.failed) {
@@ -25,9 +25,8 @@ class ProductsList extends StatelessWidget {
               children: [
                 const Text('Ups! ha ocurrido un error inesperado :('),
                 TextButton(
-                  onPressed: () => context
-                      .read<ProductsListCubit>()
-                      .getProductsByEstablishment(establishment.id),
+                  onPressed: () =>
+                      context.read<ProductsListCubit>().getProducts(),
                   child: const Text('Reintentar'),
                 )
               ],
@@ -42,16 +41,13 @@ class ProductsList extends StatelessWidget {
 }
 
 class _ProductsListView extends StatelessWidget {
-  const _ProductsListView(this.products, this.establishmentID);
+  const _ProductsListView(this.products);
   final List<Product> products;
-  final String establishmentID;
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () => context
-          .read<ProductsListCubit>()
-          .getProductsByEstablishment(establishmentID),
+      onRefresh: () => context.read<ProductsListCubit>().getProducts(),
       child: products.isNotEmpty
           ? GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
