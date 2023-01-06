@@ -16,7 +16,7 @@ class ProductsList extends StatelessWidget {
     return BlocBuilder<ProductsListCubit, ProductsListState>(
       builder: (context, state) {
         if (state.productsRequestStatus == RequestStatus.completed) {
-          return _ProductsListView(state.products);
+          return _ProductsListView(state.products, establishment.id);
         }
 
         if (state.productsRequestStatus == RequestStatus.failed) {
@@ -25,8 +25,9 @@ class ProductsList extends StatelessWidget {
               children: [
                 const Text('Ups! ha ocurrido un error inesperado :('),
                 TextButton(
-                  onPressed: () =>
-                      context.read<ProductsListCubit>().getProducts(),
+                  onPressed: () => context
+                      .read<ProductsListCubit>()
+                      .getProductsByEstablishmentAlphabet(establishment.id),
                   child: const Text('Reintentar'),
                 )
               ],
@@ -41,13 +42,16 @@ class ProductsList extends StatelessWidget {
 }
 
 class _ProductsListView extends StatelessWidget {
-  const _ProductsListView(this.products);
+  const _ProductsListView(this.products, this.establishmentID);
   final List<Product> products;
+  final String establishmentID;
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () => context.read<ProductsListCubit>().getProducts(),
+      onRefresh: () => context
+          .read<ProductsListCubit>()
+          .getProductsByEstablishmentAlphabet(establishmentID),
       child: products.isNotEmpty
           ? GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -135,8 +139,8 @@ class _ProductsListItem extends StatelessWidget {
                           ),
                     ),
                     IconButton(
-                      onPressed: () async {
-                        final productAdded = await showModalBottomSheet<bool>(
+                      onPressed: () {
+                        showModalBottomSheet<void>(
                           context: context,
                           builder: (BuildContext _) {
                             return BlocProvider.value(
@@ -145,14 +149,6 @@ class _ProductsListItem extends StatelessWidget {
                             );
                           },
                         );
-                        if (productAdded!) {
-                          // ignore: use_build_context_synchronously
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Producto agregado al carrito.'),
-                            ),
-                          );
-                        }
                       },
                       icon: Icon(
                         MdiIcons.plus,

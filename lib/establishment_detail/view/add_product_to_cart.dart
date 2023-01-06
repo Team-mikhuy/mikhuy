@@ -104,7 +104,7 @@ class _AddToCart extends State<AddToCart> {
               SizedBox(
                 child: ElevatedButton(
                   key: const Key('Cancel_AddProduct_ToCar_flatButton'),
-                  onPressed: () => Navigator.of(context).pop(false),
+                  onPressed: () => Navigator.of(context).pop(),
                   style: AppTheme.secondaryButton,
                   child: const Text('CANCELAR'),
                 ),
@@ -116,7 +116,11 @@ class _AddToCart extends State<AddToCart> {
                     context
                         .read<ProductsListCubit>()
                         .addToCart(widget._product, _counter);
-                    Navigator.of(context).pop(true);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Producto agregado al carrito'),
+                      ),
+                    );
                   },
                   style: AppTheme.secondaryButton,
                   child: const Text('AGREGAR AL CARRITO'),
