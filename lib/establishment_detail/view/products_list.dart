@@ -63,8 +63,8 @@ class _ProductsListView extends StatelessWidget {
           : Column(
               mainAxisSize: MainAxisSize.min,
               children: const [
-                Text('No se encontraron resultados'),
-                Text('🤦‍♂️'),
+                Text('No se encontró el producto'),
+                Text('😢'),
               ],
             ),
     );

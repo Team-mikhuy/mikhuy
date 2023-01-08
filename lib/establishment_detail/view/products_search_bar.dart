@@ -42,6 +42,10 @@ class ProductsSearchBar extends StatelessWidget {
               onChanged: (value) {
                 if (value.isEmpty) {
                   context.read<ProductsListCubit>().getProducts();
+                } else {
+                  context
+                      .read<ProductsListCubit>()
+                      .searchProductsByCriteria(establishmentID, value);
                 }
               },
               onSubmitted: (value) => context
