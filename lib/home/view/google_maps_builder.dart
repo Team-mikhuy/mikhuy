@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:label_marker/label_marker.dart';
 import 'package:mikhuy/establishment_detail/view/establishment_detail_page.dart';
 import 'package:mikhuy/home/cubit/establishment_list_cubit.dart';
 import 'package:mikhuy/shared/enums/request_status.dart';
+import 'package:mikhuy/theme/app_colors.dart';
 import 'package:models/establishment.dart';
 
 class GoogleMapsBuilder extends StatelessWidget {
@@ -22,7 +24,7 @@ class GoogleMapsBuilder extends StatelessWidget {
         }
 
         if (state.requestStatus == RequestStatus.completed) {
-          return _GoogleMapsView();
+          return const _GoogleMapsView();
         }
 
         return const Center(child: CircularProgressIndicator());
@@ -31,9 +33,14 @@ class GoogleMapsBuilder extends StatelessWidget {
   }
 }
 
-class _GoogleMapsView extends StatelessWidget {
-  _GoogleMapsView();
+class _GoogleMapsView extends StatefulWidget {
+  const _GoogleMapsView();
 
+  @override
+  State<_GoogleMapsView> createState() => _GoogleMapsViewState();
+}
+
+class _GoogleMapsViewState extends State<_GoogleMapsView> {
   final Completer<GoogleMapController> _controller = Completer();
 
   void _onMapCreated(GoogleMapController controller) {
@@ -61,34 +68,51 @@ class _GoogleMapsView extends StatelessWidget {
           CameraUpdate.newCameraPosition(cameraPosition),
         );
       },
-      child: GoogleMap(
-        markers: _getmarkers(context),
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: cameraPosition,
-        myLocationEnabled: true,
-        padding: const EdgeInsets.only(top: 150),
+      child: FutureBuilder(
+        future: _getmarkers(context),
+        builder: (context, AsyncSnapshot<Set<Marker>> snapshot) {
+          if (snapshot.hasData) {
+            final markers = snapshot.data!;
+            return GoogleMap(
+              markers: markers,
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: cameraPosition,
+              myLocationEnabled: true,
+              padding: const EdgeInsets.only(top: 150),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }
 
-  Set<Marker> _getmarkers(BuildContext context) {
-    return context
-        .select<EstablishmentListCubit, List<Establishment>>(
-          (value) => value.state.establishments,
-        )
-        .map(
-          (e) => Marker(
-            markerId: MarkerId(e.id),
-            position: LatLng(e.latitude, e.longitude),
-            infoWindow: InfoWindow(title: e.name),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EstablishmentDetailPage(e)),
-              );
-            },
-          ),
-        )
-        .toSet();
+  Future<Set<Marker>> _getmarkers(BuildContext context) async {
+    final establishments =
+        context.select<EstablishmentListCubit, List<Establishment>>(
+      (value) => value.state.establishments,
+    );
+    final markers = <Marker>{};
+    for (final e in establishments) {
+      await markers.addLabelMarker(
+        LabelMarker(
+          label: e.name.length > 21 ? e.name.substring(0, 22) : e.name,
+          markerId: MarkerId(e.id),
+          position: LatLng(e.latitude, e.longitude),
+          backgroundColor: AppColors.flushOrange,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (context) => EstablishmentDetailPage(e),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    return markers;
   }
 }
