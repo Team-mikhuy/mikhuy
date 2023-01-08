@@ -51,29 +51,7 @@ class AppTheme {
       /// Sets the default shape, colors, elevation and padding
       /// to match the design, making use of the primary color flushOrange
       elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-              if (states.contains(MaterialState.disabled)) {
-                return AppColors.flushOrange.shade200;
-              }
-
-              return AppColors.flushOrange.shade500;
-            },
-          ),
-          foregroundColor: MaterialStateProperty.all(AppColors.white),
-          overlayColor:
-              MaterialStateProperty.all(AppColors.flushOrange.shade700),
-          elevation: MaterialStateProperty.all(0.5),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
-            ),
-          ),
-          padding: MaterialStateProperty.all(
-            const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
-          ),
-        ),
+        style: primaryButton,
       ),
 
       /// Sets the default shape and colors to match the design,
@@ -149,29 +127,75 @@ class AppTheme {
           ),
         ),
       ),
+
+      dialogTheme: const DialogTheme(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        alignment: Alignment.center,
+      ),
+    );
+  }
+
+  static ButtonStyle get primaryButton {
+    return ButtonStyle(
+      backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.disabled)) {
+            return AppColors.flushOrange.shade200;
+          }
+
+          return AppColors.flushOrange.shade500;
+        },
+      ),
+      foregroundColor: MaterialStateProperty.all(AppColors.white),
+      overlayColor: MaterialStateProperty.all(AppColors.flushOrange.shade700),
+      elevation: MaterialStateProperty.all(0.5),
+      shape: MaterialStateProperty.all(
+        const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+      ),
+      padding: MaterialStateProperty.all(
+        const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+      ),
     );
   }
 
   static ButtonStyle get secondaryButton {
     return ButtonStyle(
       backgroundColor: MaterialStateProperty.all(AppColors.white),
-      foregroundColor:
-          MaterialStateProperty.all(AppColors.flushOrange.shade700),
+      foregroundColor: MaterialStateProperty.resolveWith(
+        (states) {
+          if (states.contains(MaterialState.disabled)) {
+            return AppColors.flushOrange.shade400;
+          }
+          return AppColors.flushOrange.shade700;
+        },
+      ),
       overlayColor: MaterialStateProperty.all(AppColors.flushOrange.shade200),
       elevation: MaterialStateProperty.all(0),
       shape: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.pressed)) {
           return const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
           );
         }
+
+        if (states.contains(MaterialState.disabled)) {
+          return RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            side: BorderSide(color: AppColors.flushOrange.shade400),
+          );
+        }
+
         return RoundedRectangleBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
           side: BorderSide(color: AppColors.flushOrange.shade700),
         );
       }),
       padding: MaterialStateProperty.all(
-        const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+        const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       ),
     );
   }

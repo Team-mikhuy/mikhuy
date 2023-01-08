@@ -5,6 +5,7 @@ import 'package:mikhuy/establishment_detail/cubit/products_list_cubit.dart';
 import 'package:mikhuy/establishment_detail/view/cart_page.dart';
 import 'package:mikhuy/establishment_detail/view/products_list.dart';
 import 'package:mikhuy/establishment_detail/view/products_search_bar.dart';
+import 'package:mikhuy/shared/shared.dart';
 import 'package:mikhuy/theme/theme.dart';
 import 'package:models/establishment.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -70,13 +71,13 @@ class _EstablishmentDetailView extends StatelessWidget {
           leading: IconButton(
             onPressed: () async {
               if (context.read<ProductsListCubit>().state.cart.isNotEmpty) {
-                final goBack = await showDialog<bool>(
+                final exit = await showDialog<bool>(
                   context: context,
                   builder: _getGoBackAlert,
                 );
 
                 // ignore: use_build_context_synchronously
-                if (goBack!) Navigator.of(context).pop();
+                if (exit != null && exit) Navigator.of(context).pop();
               } else {
                 Navigator.of(context).pop();
               }
@@ -196,35 +197,24 @@ class _EstablishmentDetailView extends StatelessWidget {
     }
   }
 
-  AlertDialog _getGoBackAlert(BuildContext context) {
-    return AlertDialog(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
-      ),
+  ConfirmationAlertDialog _getGoBackAlert(BuildContext context) {
+    return ConfirmationAlertDialog(
       title: const Icon(MdiIcons.exclamation),
       content: const Text(
-          'Tienes una reserva en proceso, se cancelará si sales del establecimiento.\n¿Deseas continuar?'),
-      actionsPadding: const EdgeInsets.only(
-        bottom: 16,
-        left: 16,
-        right: 16,
+        '''
+Tiene una reserva en proceso, se cancelará si sale del establecimiento.
+
+¿Desea continuar?''',
+        textAlign: TextAlign.center,
       ),
-      contentPadding: const EdgeInsets.all(16),
-      actions: <Widget>[
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop(true);
-          },
-          style: AppTheme.secondaryButton,
-          child: const Text('Salir'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop(false);
-          },
-          child: const Text('Permanecer'),
-        ),
-      ],
+      confirmButtonContent: const Text('Permanecer'),
+      onConfirmPressed: () {
+        Navigator.of(context).pop(false);
+      },
+      cancelButtonContent: const Text('Salir'),
+      onCancelPressed: () {
+        Navigator.of(context).pop(true);
+      },
     );
   }
 }
