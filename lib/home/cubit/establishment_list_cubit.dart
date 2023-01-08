@@ -115,9 +115,11 @@ class EstablishmentListCubit extends Cubit<EstablishmentListState> {
                     .toLowerCase()
                     .contains(criteria.toLowerCase()) ||
                 products.any(
-                  (element) => element.name
-                      .toLowerCase()
-                      .contains(criteria.toLowerCase()),
+                  (element) =>
+                      element.name
+                          .toLowerCase()
+                          .contains(criteria.toLowerCase()) &&
+                      element.stock > 0,
                 )) {
               establishments.add(establishment.copyWith(products: products));
             }
