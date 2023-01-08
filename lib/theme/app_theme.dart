@@ -168,7 +168,7 @@ class AppTheme {
       foregroundColor: MaterialStateProperty.resolveWith(
         (states) {
           if (states.contains(MaterialState.disabled)) {
-            return AppColors.flushOrange.shade400;
+            return AppColors.flushOrange.shade200;
           }
           return AppColors.flushOrange.shade700;
         },
@@ -185,7 +185,7 @@ class AppTheme {
         if (states.contains(MaterialState.disabled)) {
           return RoundedRectangleBorder(
             borderRadius: const BorderRadius.all(Radius.circular(8)),
-            side: BorderSide(color: AppColors.flushOrange.shade400),
+            side: BorderSide(color: AppColors.flushOrange.shade200),
           );
         }
 
