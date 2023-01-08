@@ -45,7 +45,7 @@ class SignInPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Inicia sesión para ingresar :)',
+                    'Inicie sesión para ingresar :)',
                     style: Theme.of(context)
                         .textTheme
                         .subtitle1!

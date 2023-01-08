@@ -4,7 +4,8 @@
 class SignUpWithEmailAndPasswordFailure implements Exception {
   /// {@macro sign_up_with_email_and_password_failure}
   const SignUpWithEmailAndPasswordFailure([
-    this.message = 'Ha ocurrido un error inesperado :(',
+    this.message =
+        'Ups, ha ocurrido un problema inesperado, inténtalo de nuevo :(',
   ]);
 
   /// Create an authentication message
@@ -52,7 +53,8 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
 class LogInWithEmailAndPasswordFailure implements Exception {
   /// {@macro log_in_with_email_and_password_failure}
   const LogInWithEmailAndPasswordFailure([
-    this.message = 'Ha ocurrido un error inesperado :(',
+    this.message =
+        'Ups, ha ocurrido un problema inesperado, inténtalo de nuevo :(',
   ]);
 
   /// Create an authentication message
@@ -73,7 +75,7 @@ class LogInWithEmailAndPasswordFailure implements Exception {
         );
       case 'wrong-password':
         return const LogInWithEmailAndPasswordFailure(
-          'Contraseña incorrecta, inténtalo otra vez.',
+          'La contraseña que ingresaste es incorrecta :(',
         );
       default:
         return const LogInWithEmailAndPasswordFailure();
