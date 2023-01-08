@@ -111,8 +111,14 @@ class EstablishmentListCubit extends Cubit<EstablishmentListState> {
             final products = await _getProducts(establishment.id);
             if (products.isEmpty) continue;
 
-            if (establishment.name.contains(criteria) ||
-                products.any((element) => element.name.contains(criteria))) {
+            if (establishment.name
+                    .toLowerCase()
+                    .contains(criteria.toLowerCase()) ||
+                products.any(
+                  (element) => element.name
+                      .toLowerCase()
+                      .contains(criteria.toLowerCase()),
+                )) {
               establishments.add(establishment.copyWith(products: products));
             }
           }
