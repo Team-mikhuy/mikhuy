@@ -163,11 +163,11 @@ class CartPage extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       key: const Key('Create_Reservation_flatButton'),
-                      onPressed: () {
-                        context
-                            .read<ProductsListCubit>()
-                            .confirmReservation(_establishment, userId);
-                      },
+                      onPressed: cart.isNotEmpty
+                          ? () => context
+                              .read<ProductsListCubit>()
+                              .confirmReservation(_establishment, userId)
+                          : null,
                       style: AppTheme.secondaryButton,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

@@ -155,23 +155,37 @@ class AppTheme {
   static ButtonStyle get secondaryButton {
     return ButtonStyle(
       backgroundColor: MaterialStateProperty.all(AppColors.white),
-      foregroundColor:
-          MaterialStateProperty.all(AppColors.flushOrange.shade700),
+      foregroundColor: MaterialStateProperty.resolveWith(
+        (states) {
+          if (states.contains(MaterialState.disabled)) {
+            return AppColors.flushOrange.shade200;
+          }
+          return AppColors.flushOrange.shade700;
+        },
+      ),
       overlayColor: MaterialStateProperty.all(AppColors.flushOrange.shade200),
       elevation: MaterialStateProperty.all(0),
       shape: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.pressed)) {
           return const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
           );
         }
+
+        if (states.contains(MaterialState.disabled)) {
+          return RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            side: BorderSide(color: AppColors.flushOrange.shade200),
+          );
+        }
+
         return RoundedRectangleBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
           side: BorderSide(color: AppColors.flushOrange.shade700),
         );
       }),
       padding: MaterialStateProperty.all(
-        const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+        const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       ),
     );
   }
