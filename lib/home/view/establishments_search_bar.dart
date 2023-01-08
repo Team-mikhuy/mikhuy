@@ -46,6 +46,10 @@ class EstablishmentsSearchBar extends StatelessWidget {
               onChanged: (value) {
                 if (value.isEmpty) {
                   context.read<EstablishmentListCubit>().getEstablisments();
+                } else {
+                  context
+                      .read<EstablishmentListCubit>()
+                      .searchEstablishments(value);
                 }
               },
               onSubmitted: (value) => context
