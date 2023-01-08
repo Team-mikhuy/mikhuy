@@ -9,7 +9,7 @@ import 'package:mikhuy/theme/app_theme.dart';
 import 'package:models/models.dart';
 
 class CartPage extends StatelessWidget {
-  CartPage(this._establishment, {super.key});
+  const CartPage(this._establishment, {super.key});
   final Establishment _establishment;
 
   @override
@@ -18,7 +18,9 @@ class CartPage extends StatelessWidget {
         (value) => value.state.cart);
 
     var total = 0.0;
-    cart.forEach((element) => total += element.subtotal);
+    for (final element in cart) {
+      total += element.subtotal;
+    }
 
     final userId =
         context.select<AppBloc, String>((value) => value.state.user.id);
@@ -86,55 +88,11 @@ class CartPage extends StatelessWidget {
           }
         },
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              DataTable(
-                  columnSpacing: 32,
-                  columns: const [
-                    DataColumn(label: Text('')),
-                    DataColumn(label: Text('Producto')),
-                    DataColumn(label: Text('c/u')),
-                    DataColumn(label: Text('Subtotal')),
-                    DataColumn(label: Text(''))
-                  ],
-                  rows: cart.map((detail) {
-                    return DataRow(
-                      cells: [
-                        DataCell(
-                          Text(
-                            detail.quantity.toString(),
-                            style: Theme.of(context).textTheme.headline2,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            detail.productName,
-                            style: Theme.of(context).textTheme.subtitle2,
-                          ),
-                        ),
-                        DataCell(Text(
-                          'Bs. ${detail.unitPrice}',
-                          style: Theme.of(context).textTheme.subtitle2,
-                        )),
-                        DataCell(Text(
-                          'Bs. ${detail.subtotal}',
-                          style: Theme.of(context).textTheme.subtitle2,
-                        )),
-                        DataCell(
-                          IconButton(
-                            icon: const Icon(MdiIcons.deleteOutline),
-                            onPressed: () {
-                              context
-                                  .read<ProductsListCubit>()
-                                  .removeItemFromCart(detail);
-                            },
-                          ),
-                        )
-                      ],
-                    );
-                  }).toList()),
+              _CartProductList(cart: cart),
               Column(
                 children: [
                   const Divider(
@@ -184,6 +142,68 @@ class CartPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _CartProductList extends StatelessWidget {
+  const _CartProductList({required this.cart});
+
+  final List<ReservationDetail> cart;
+
+  @override
+  Widget build(BuildContext context) {
+    return DataTable(
+      horizontalMargin: 0,
+      columnSpacing: 24,
+      columns: const [
+        DataColumn(label: Text('Cant.')),
+        DataColumn(label: Text('Producto')),
+        DataColumn(label: Text('c/u')),
+        DataColumn(label: Text('Subtotal')),
+        DataColumn(label: Text(''))
+      ],
+      rows: cart.map((detail) {
+        return DataRow(
+          cells: [
+            DataCell(
+              Text(
+                detail.quantity.toString(),
+                style: Theme.of(context).textTheme.headline2,
+              ),
+            ),
+            DataCell(
+              Text(
+                detail.productName,
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
+            ),
+            DataCell(
+              Text(
+                'Bs.${detail.unitPrice}',
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
+            ),
+            DataCell(
+              Text(
+                'Bs.${detail.subtotal}',
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
+            ),
+            DataCell(
+              IconButton(
+                icon: const Icon(
+                  MdiIcons.close,
+                  size: 20,
+                ),
+                onPressed: () {
+                  context.read<ProductsListCubit>().removeItemFromCart(detail);
+                },
+              ),
+            )
+          ],
+        );
+      }).toList(),
     );
   }
 }
