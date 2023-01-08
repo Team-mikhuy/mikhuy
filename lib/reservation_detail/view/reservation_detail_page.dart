@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mikhuy/reservation_detail/reservation_detail.dart';
 import 'package:mikhuy/shared/enums/request_status.dart';
+import 'package:mikhuy/shared/shared.dart';
 import 'package:mikhuy/theme/theme.dart';
 import 'package:models/models.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -25,55 +26,16 @@ class ReservationDetailPage extends StatelessWidget {
           IconButton(
             onPressed: () {
               showDialog<bool>(
-                barrierDismissible: false,
                 context: context,
                 builder: (_) {
-                  return Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: AppColors.white,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '¿Estas seguro de\ncancelar tu reserva?',
-                            style: Theme.of(context).textTheme.headline2,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Esta accion no se\npuede deshacer 👀',
-                            style: Theme.of(context).textTheme.subtitle1,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('Volver'),
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  Navigator.of(context).pop();
-                                  await _cubit.cancelReservation();
-                                },
-                                child: const Text('Cancelar reserva'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                  return BlocProvider.value(
+                    value: _cubit,
+                    child: const _ConfirmReservationCancelationAlertDialog(),
                   );
                 },
               );
             },
-            icon: const Icon(MdiIcons.deleteOutline),
+            icon: const Icon(MdiIcons.cancel),
             color: AppColors.grey.shade700,
           )
         ],
@@ -82,6 +44,39 @@ class ReservationDetailPage extends StatelessWidget {
         value: _cubit,
         child: const _ReservationDetailView(),
       ),
+    );
+  }
+}
+
+class _ConfirmReservationCancelationAlertDialog extends StatelessWidget {
+  const _ConfirmReservationCancelationAlertDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return ConfirmationAlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '¿Estas seguro de\ncancelar tu reserva?',
+            style: Theme.of(context).textTheme.headline2,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Esta accion no se\npuede deshacer 👀',
+            style: Theme.of(context).textTheme.subtitle1,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+      confirmButtonContent: const Text('Volver'),
+      onConfirmPressed: () => Navigator.of(context).pop(),
+      cancelButtonContent: const Text('Confirmar'),
+      onCancelPressed: () async {
+        Navigator.of(context).pop();
+        await context.read<ReservationDetailCubit>().cancelReservation();
+      },
     );
   }
 }
@@ -283,7 +278,7 @@ class DetailTable extends StatelessWidget {
     return DataTable(
       columnSpacing: 32,
       columns: const [
-        DataColumn(label: Text('')),
+        DataColumn(label: Text('Cant.')),
         DataColumn(label: Text('Producto')),
         DataColumn(label: Text('c/u')),
         DataColumn(label: Text('Subtotal')),

@@ -13,8 +13,7 @@ class SignInForm extends StatelessWidget {
             ..showSnackBar(
               SnackBar(
                 content: Text(
-                  state.errorMessage ??
-                      'Ups! Ocurrió un error inesperado, inténtalo otra vez.',
+                  state.errorMessage ?? 'Ha ocurrido un problema inesperado :(',
                 ),
               ),
             );

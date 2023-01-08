@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:mikhuy/app/app.dart';
 import 'package:mikhuy/home/cubit/establishment_list_cubit.dart';
 import 'package:mikhuy/outstanding_reservations/view/outstanding_reservations_page.dart';
+import 'package:mikhuy/shared/widgets/confirmation_alert_dialog.dart';
 import 'package:mikhuy/theme/theme.dart';
 
 class EstablishmentsSearchBar extends StatelessWidget {
@@ -78,37 +79,9 @@ class EstablishmentsSearchBar extends StatelessWidget {
                 child: const Text('Cerrar sesión'),
                 onTap: () async {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    showDialog(
+                    showDialog<void>(
                       context: context,
-                      builder: (context) => AlertDialog(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
-                        ),
-                        title: const Icon(MdiIcons.exclamation),
-                        content: const Text('¿Está seguro/a de cerrar sesión?'),
-                        actionsPadding: const EdgeInsets.only(
-                          bottom: 16,
-                          left: 16,
-                          right: 16,
-                        ),
-                        contentPadding: const EdgeInsets.all(16),
-                        actions: <Widget>[
-                          ElevatedButton(
-                            onPressed: () {
-                              context.read<AppBloc>().add(AppLogoutRequested());
-                              Navigator.of(context).pop();
-                            },
-                            style: AppTheme.secondaryButton,
-                            child: const Text('Confirmar'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Volver atrás'),
-                          ),
-                        ],
-                      ),
+                      builder: (context) => const ConfirmLogOutAlertDialog(),
                     );
                   });
                 },
@@ -117,6 +90,27 @@ class EstablishmentsSearchBar extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ConfirmLogOutAlertDialog extends StatelessWidget {
+  const ConfirmLogOutAlertDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ConfirmationAlertDialog(
+      title: const Icon(MdiIcons.exclamation),
+      content: const Text('¿Está seguro/a de cerrar sesión?'),
+      confirmButtonContent: const Text('Volver atrás'),
+      onConfirmPressed: () {
+        Navigator.pop(context);
+      },
+      cancelButtonContent: const Text('Confirmar'),
+      onCancelPressed: () {
+        context.read<AppBloc>().add(AppLogoutRequested());
+        Navigator.of(context).pop();
+      },
     );
   }
 }
