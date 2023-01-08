@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:mikhuy/app/app.dart';
 import 'package:mikhuy/establishment_detail/cubit/products_list_cubit.dart';
 import 'package:mikhuy/shared/enums/request_status.dart';
+import 'package:mikhuy/shared/widgets/confirmation_alert_dialog.dart';
 import 'package:mikhuy/theme/app_colors.dart';
 import 'package:mikhuy/theme/app_theme.dart';
 import 'package:models/models.dart';
@@ -197,13 +198,44 @@ class _CartProductList extends StatelessWidget {
                   size: 20,
                 ),
                 onPressed: () {
-                  context.read<ProductsListCubit>().removeItemFromCart(detail);
+                  showDialog<void>(
+                    context: context,
+                    builder: (_) {
+                      return BlocProvider.value(
+                        value: context.read<ProductsListCubit>(),
+                        child: _ItemRemovalConfirmationAlertDialog(detail),
+                      );
+                    },
+                  );
                 },
               ),
             )
           ],
         );
       }).toList(),
+    );
+  }
+}
+
+class _ItemRemovalConfirmationAlertDialog extends StatelessWidget {
+  const _ItemRemovalConfirmationAlertDialog(this._detail);
+  final ReservationDetail _detail;
+
+  @override
+  Widget build(BuildContext context) {
+    return ConfirmationAlertDialog(
+      title: const Text('Eliminar producto'),
+      content: Text(
+        '¿Está seguro/a de eliminar ${_detail.productName} del carrito?',
+        textAlign: TextAlign.center,
+      ),
+      confirmButtonContent: const Text('Volver atrás'),
+      onConfirmPressed: () => Navigator.of(context).pop(),
+      cancelButtonContent: const Text('Eliminar'),
+      onCancelPressed: () {
+        context.read<ProductsListCubit>().removeItemFromCart(_detail);
+        Navigator.of(context).pop();
+      },
     );
   }
 }
